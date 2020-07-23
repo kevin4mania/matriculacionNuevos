@@ -15,7 +15,7 @@ const pagesRoutes: Routes = [
             { path: 'inicio', component: DashboardComponent, data:{ titulo: 'Dashboard', descripcion:'Control de Asistencia y Actividades', icon:'ik ik-align-justify'} },
             { path: 'perfil', component: PerfilComponent,  data:{ titulo: 'Mi Perfil', descripcion:'Personaliza tus datos', icon:'ik ik-user'}  },
             { path: 'tramites', component: TramitesComponent, data:{ titulo: 'Trámites', descripcion:'Personaliza tus datos', icon:'ik ik-user'}  },
-            { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
+            { path: '', redirectTo: '/tramites', pathMatch: 'full' }
         ]
     }
 ];

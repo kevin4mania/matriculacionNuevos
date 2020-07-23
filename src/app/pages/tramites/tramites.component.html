@@ -1,3 +1,115 @@
-<p>
-  tramites works!
-</p>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <p-table #reportesTable [value]="tramites" styleClass="ui-table-tramites" selectionMode="multiple" dataKey="idFormulario" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10,15,20]" [loading]="loading" [paginator]="true"
+                    [filterDelay]="0" [responsive]=true [globalFilterFields]="['cedula','placa','codigoFormulario']" [(selection)]="selectedFormularios">
+                    <ng-template pTemplate="caption">
+                        &nbsp;
+                        <div class="ui-table-globalfilter-container">
+                            <input class="ui-inputtext ui-corner-all ui-state-default ui-widget" pInputText type="text" (input)="reportesTable.filterGlobal($event.target.value, 'contains')" placeholder="Buscar" />
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="cedula">N° Trámite
+                                <p-sortIcon field="cedula"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="nombres">Estado
+                                <p-sortIcon field="nombres"></p-sortIcon>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-matriculacion let-rowIndex="rowIndex">
+                        <tr class="ui-selectable-row">
+                            <td>
+                                <span class="ui-column-title">Cédula</span>
+                                <span>{{matriculacion.cedula}}</span>
+                            </td>
+                            <td>
+                                <span class="ui-column-title">Nombres</span>
+                                <span>{{matriculacion.nombres}} {{matriculacion.apellidos}}</span>
+                            </td>
+                            <td>
+                                <span class="ui-column-title">Placa</span>
+                                <span>{{matriculacion.placa}}</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="3" style="text-align:left">Registros no encontrados.</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="widget">
+                            <div class="widget-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="state">
+                                        <h6>Server</h6>
+                                        <h2>62%</h2>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ik ik-server"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="widget">
+                            <div class="widget-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="state">
+                                        <h6>Server</h6>
+                                        <h2>62%</h2>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ik ik-server"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="widget">
+                            <div class="widget-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="state">
+                                        <h6>Server</h6>
+                                        <h2>62%</h2>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ik ik-server"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="widget">
+                            <div class="widget-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="state">
+                                        <h6>Server</h6>
+                                        <h2>62%</h2>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ik ik-server"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

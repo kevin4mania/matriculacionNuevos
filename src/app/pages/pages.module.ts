@@ -18,6 +18,9 @@ import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.compo
 import { ComponentsModule } from '../components/components.module';
 import { TramitesComponent } from './tramites/tramites.component';
 
+import {TableModule} from 'primeng/table';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
+
 @NgModule({
 declarations:[
     PagesComponent,
@@ -38,7 +41,9 @@ imports:[
     FormsModule,
     ReactiveFormsModule,
     NgbModule,
-    ComponentsModule
+    ComponentsModule,
+    TableModule,
+    ScrollPanelModule
 ]
 
 })
