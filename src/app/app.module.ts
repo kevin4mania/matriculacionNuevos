@@ -22,7 +22,6 @@ import { ChangePasswordComponent } from './login/change-password.component';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { InterceptorService } from './interceptors/interceptor.service';
-import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
 import { ToastrModule } from 'ngx-toastr';
 
 
@@ -43,7 +42,6 @@ import { ToastrModule } from 'ngx-toastr';
     FormsModule,
     ReactiveFormsModule,
     NgbModule,
-    FullCalendarModule,
     ToastrModule.forRoot() // ToastrModule added
   ],
   providers: [
