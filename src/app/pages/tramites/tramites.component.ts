@@ -1,13 +1,18 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import {MatPaginatorIntl} from '@angular/material';
+import Swal from 'sweetalert2'
+import { Router } from '@angular/router';
+import {MatSnackBar, MatSnackBarVerticalPosition, MatSnackBarHorizontalPosition} from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-tramites',
   templateUrl: './tramites.component.html',
   styleUrls: ['./tramites.component.scss'],
+  encapsulation: ViewEncapsulation.None 
 })
 export class TramitesComponent extends MatPaginatorIntl implements OnInit, AfterViewInit  {
   
@@ -32,16 +37,20 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
 
   displayedColumns: string[] = ['position', 'name','details'];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-
+  horizontalPosition: MatSnackBarHorizontalPosition = 'end';
+  verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+  
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
   tramites: any[];
-
   loading = false;
 
-  constructor() { 
-super();
+  constructor(
+    public router: Router,
+    private _snackBar: MatSnackBar
+  ) { 
+    super();
   }
 
   ngOnInit() {
@@ -58,6 +67,16 @@ super();
   }
 
   redirectToDelete = (id: string) => {
+    let snackBarRef = this._snackBar.open('Trámite eliminado', 'Deshacer', {
+      duration: 5000,
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      panelClass:['customClass']
+    });
+
+    snackBarRef.onAction().subscribe(() => {
+      console.log('The snack-bar action was triggered!');
+    });
     
   }
 
@@ -67,6 +86,21 @@ super();
 
   redirectToDetails = (id: string) => {
     
+  }
+
+  redirectToNewTramite = () => {
+    Swal.fire({
+      title: 'Se asignara un código al crear un trámite',
+      text: "Desea continuar?",
+      type: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.value) {
+        this.router.navigate(['/nuevoTramite'])
+      }
+    })
   }
 
 }
