@@ -1,111 +1,90 @@
-<div class="card">
-    <div class="card-body">
+<div class="row">
+    <div class="col-lg-7 col-md-6 col-sm-12 mb-15">
+
+        <div class="mat-elevation-z8">
+            <div class="text-right" style="background-color: #fff;">
+                <mat-form-field fxFlex="40%" class="mt-10 mr-3">
+                    <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Buscar">
+                </mat-form-field>
+            </div>
+            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+                <!-- Position Column -->
+                <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> No. Trámite</th>
+                    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span *ngIf="element.name=='Iniciado'" class="badge badge-red text-light"> {{element.name}}</span>
+                        <span *ngIf="element.name=='En Proceso'" class="badge badge-blue text-light"> {{element.name}}</span>
+                        <span *ngIf="element.name=='Finalizado'" class="badge badge-success"> {{element.name}}</span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="details">
+                    <th mat-header-cell *matHeaderCellDef> </th>
+                    <td mat-cell *matCellDef="let element" class="text-center">
+                        <button matTooltip="Ver Detalle" mat-icon-button color="primary" (click)="redirectToDetails(element.id)">
+                          <mat-icon class="mat-18">description</mat-icon>
+                      </button>
+                        <button matTooltip="Generar Sobre" mat-icon-button style="color: darkgrey;" (click)="redirectToSobre(element.id)">
+                        <mat-icon class="mat-18">local_post_office</mat-icon>
+                    </button>
+                        <button matTooltip="Eliminar Trámite" mat-icon-button color="warn" (click)="redirectToDelete(element.id)">
+                        <mat-icon class="mat-18">delete</mat-icon>
+                    </button>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+
+    </div>
+    <div class="col-lg-5 col-md-6 col-sm-12">
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
-                <p-table #reportesTable [value]="tramites" styleClass="ui-table-tramites" selectionMode="multiple" dataKey="idFormulario" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10,15,20]" [loading]="loading" [paginator]="true"
-                    [filterDelay]="0" [responsive]=true [globalFilterFields]="['cedula','placa','codigoFormulario']" [(selection)]="selectedFormularios">
-                    <ng-template pTemplate="caption">
-                        &nbsp;
-                        <div class="ui-table-globalfilter-container">
-                            <input class="ui-inputtext ui-corner-all ui-state-default ui-widget" pInputText type="text" (input)="reportesTable.filterGlobal($event.target.value, 'contains')" placeholder="Buscar" />
-                        </div>
-                    </ng-template>
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th pSortableColumn="cedula">N° Trámite
-                                <p-sortIcon field="cedula"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="nombres">Estado
-                                <p-sortIcon field="nombres"></p-sortIcon>
-                            </th>
-                            <th></th>
-                        </tr>
-                    </ng-template>
-
-                    <ng-template pTemplate="body" let-matriculacion let-rowIndex="rowIndex">
-                        <tr class="ui-selectable-row">
-                            <td>
-                                <span class="ui-column-title">Cédula</span>
-                                <span>{{matriculacion.cedula}}</span>
-                            </td>
-                            <td>
-                                <span class="ui-column-title">Nombres</span>
-                                <span>{{matriculacion.nombres}} {{matriculacion.apellidos}}</span>
-                            </td>
-                            <td>
-                                <span class="ui-column-title">Placa</span>
-                                <span>{{matriculacion.placa}}</span>
-                            </td>
-                        </tr>
-                    </ng-template>
-
-                    <ng-template pTemplate="emptymessage">
-                        <tr>
-                            <td colspan="3" style="text-align:left">Registros no encontrados.</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
+                <div class="card social-card" style="cursor: pointer;">
+                    <div class="card-body text-center">
+                        <h2 class="text-facebook mb-20"><i class="fas fa-file-invoice"></i></h2>
+                        <h3 class="text-facebook fw-700">Crear Trámite</h3>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="widget">
-                            <div class="widget-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="state">
-                                        <h6>Server</h6>
-                                        <h2>62%</h2>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="ik ik-server"></i>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="card ticket-card">
+                    <div class="card-body">
+                        <p class="mb-30 bg-red lbl-card"><i class="fas fa-folder-plus"></i> Trámites Iniciados</p>
+                        <div class="text-center">
+                            <h2 class="mb-0 d-inline-block text-red">200</h2>
+                            <p class="mb-0 d-inline-block"> Trámites</p>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="widget">
-                            <div class="widget-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="state">
-                                        <h6>Server</h6>
-                                        <h2>62%</h2>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="ik ik-server"></i>
-                                    </div>
-                                </div>
-                            </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="card ticket-card">
+                    <div class="card-body">
+                        <p class="mb-30 bg-blue lbl-card"><i class="fas fa-folder-open"></i> Trámites en Proceso</p>
+                        <div class="text-center">
+                            <h2 class="mb-0 d-inline-block text-blue">134</h2>
+                            <p class="mb-0 d-inline-block"> Trámites</p>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="widget">
-                            <div class="widget-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="state">
-                                        <h6>Server</h6>
-                                        <h2>62%</h2>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="ik ik-server"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="widget">
-                            <div class="widget-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="state">
-                                        <h6>Server</h6>
-                                        <h2>62%</h2>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="ik ik-server"></i>
-                                    </div>
-                                </div>
-                            </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="card ticket-card">
+                    <div class="card-body">
+                        <p class="mb-30 bg-green lbl-card"><i class="fas fa-folder"></i> Trámites Finalizados</p>
+                        <div class="text-center">
+                            <h2 class="mb-0 d-inline-block text-green">307</h2>
+                            <p class="mb-0 d-inline-block"> Trámites</p>
                         </div>
                     </div>
                 </div>

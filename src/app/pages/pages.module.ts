@@ -21,6 +21,17 @@ import { TramitesComponent } from './tramites/tramites.component';
 import {TableModule} from 'primeng/table';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 
+ 	
+import { MatTableModule } from '@angular/material/table';
+import {MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatFormFieldModule, } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon'; 
+import { MatPaginatorIntl} from '@angular/material'; 
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+
 @NgModule({
 declarations:[
     PagesComponent,
@@ -43,8 +54,17 @@ imports:[
     NgbModule,
     ComponentsModule,
     TableModule,
-    ScrollPanelModule
-]
+    ScrollPanelModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule
+],
+providers: [{ provide: MatPaginatorIntl, useClass: TramitesComponent}], 
 
 })
 
