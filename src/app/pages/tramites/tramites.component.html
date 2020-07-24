@@ -31,10 +31,10 @@
                         <button matTooltip="Ver Detalle" mat-icon-button color="primary" (click)="redirectToDetails(element.id)">
                           <mat-icon class="mat-18">description</mat-icon>
                       </button>
-                        <button matTooltip="Generar Sobre" mat-icon-button style="color: darkgrey;" (click)="redirectToSobre(element.id)">
+                        <button *ngIf="element.name=='Finalizado'" matTooltip="Generar Sobre" mat-icon-button style="color: #19b5fe;" (click)="redirectToSobre(element.id)">
                         <mat-icon class="mat-18">local_post_office</mat-icon>
                     </button>
-                        <button matTooltip="Eliminar Trámite" mat-icon-button color="warn" (click)="redirectToDelete(element.id)">
+                        <button *ngIf="element.name!='Finalizado'" matTooltip="Eliminar Trámite" mat-icon-button color="warn" (click)="redirectToDelete(element.id)">
                         <mat-icon class="mat-18">delete</mat-icon>
                     </button>
                     </td>
@@ -49,7 +49,7 @@
     <div class="col-lg-5 col-md-6 col-sm-12">
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
-                <div class="card social-card" style="cursor: pointer;">
+                <div class="card social-card" style="cursor: pointer;" (click)="redirectToNewTramite()">
                     <div class="card-body text-center">
                         <h2 class="text-facebook mb-20"><i class="fas fa-file-invoice"></i></h2>
                         <h3 class="text-facebook fw-700">Crear Trámite</h3>
