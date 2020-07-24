@@ -14,7 +14,6 @@ import { PerfilComponent } from './perfil/perfil.component';
 
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.component';
 import { ComponentsModule } from '../components/components.module';
 import { TramitesComponent } from './tramites/tramites.component';
 
@@ -31,6 +30,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { MatPaginatorIntl} from '@angular/material'; 
 import {MatButtonModule} from '@angular/material/button';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { NuevoTramiteComponent } from './nuevo-tramite/nuevo-tramite.component';
 
 @NgModule({
 declarations:[
@@ -38,8 +38,8 @@ declarations:[
     DashboardComponent,
     TemplateComponent,
     PerfilComponent,
-    DashboardAdminComponent,
     TramitesComponent,
+    NuevoTramiteComponent,
 ],
 exports:[
     DashboardComponent,
