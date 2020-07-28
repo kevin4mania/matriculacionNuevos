@@ -6,6 +6,7 @@ import {MatPaginatorIntl} from '@angular/material';
 import Swal from 'sweetalert2'
 import { Router } from '@angular/router';
 import {MatSnackBar, MatSnackBarVerticalPosition, MatSnackBarHorizontalPosition} from '@angular/material/snack-bar';
+import { UiServicesService, ServiciosService } from 'src/app/services/service.index';
 
 
 @Component({
@@ -48,7 +49,9 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
 
   constructor(
     public router: Router,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    public _uiService: UiServicesService,
+    public servicios: ServiciosService,
   ) { 
     super();
   }
@@ -98,7 +101,25 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.value) {
-        this.router.navigate(['/nuevoTramite'])
+        this._uiService.loadingCarga(true);
+        let formTramite = {
+          'idTR':'0',
+          'idPc':'1',
+          'nmTr':'',
+          'usCr':'DCORRAL',
+          'esta':'GEN',
+        }
+        this.servicios.createTramite(formTramite).subscribe((resp:any)=>{
+          console.log(resp);
+          if(resp.codRetorno=='0001'){
+            this.router.navigate(['/nuevoTramite'])
+            this._uiService.loadingCarga(false);
+          }else{
+            this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
+          }
+        },error=>{
+          this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
+        });
       }
     })
   }

@@ -15,8 +15,8 @@ export class ServiciosService {
 
   
 
-  getCatalogoById(idCatalogo){
-    return this.http.get(environment.URL_SERVICIOS+'/rtv/catalogo/findAllByCodi/'+idCatalogo);
+  createTramite(form){
+    return this.http.post(environment.URL_SERVICIOS+'/tramite/insert',form);
   }
 
 
