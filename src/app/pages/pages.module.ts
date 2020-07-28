@@ -32,6 +32,10 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { NuevoTramiteComponent } from './nuevo-tramite/nuevo-tramite.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {DialogModule} from 'primeng/dialog';
+import {ButtonModule} from 'primeng/button';
+import {InputTextModule} from 'primeng/inputtext';
+
 
 @NgModule({
 declarations:[
@@ -64,7 +68,10 @@ imports:[
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    DialogModule,
+    ButtonModule,
+    InputTextModule
 ],
 providers: [{ provide: MatPaginatorIntl, useClass: TramitesComponent}], 
 
