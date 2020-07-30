@@ -1,25 +1,25 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-nuevo-tramite',
   templateUrl: './nuevo-tramite.component.html',
-  styleUrls: ['./nuevo-tramite.component.css']
+  styleUrls: ['./nuevo-tramite.component.scss']
 })
 export class NuevoTramiteComponent implements OnInit {
 
   displayDialog: boolean;
-
   car: Car = {};
-
   selectedCar;
-
   newCar: boolean;
-
   cars: Car[];
-
   cols: any[];
+  thirdFormGroup: FormGroup;
 
-  constructor() { }
+  constructor(
+    private _formBuilder: FormBuilder,
+  ) {  
+  }
 
   ngOnInit() {
     this.cols = [
@@ -32,6 +32,21 @@ export class NuevoTramiteComponent implements OnInit {
       { field: 'correo', header: 'Correo' },
       { field: 'contacto', header: 'Contacto' }
   ];
+
+  this.thirdFormGroup = this._formBuilder.group({
+    codigoFormulario: ['9999'],
+    formularioMatricula: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
+    identificacion:[''],
+    nombres: ['', Validators.required],
+    apellidos: ['', Validators.required],
+    telConvencional: ['',Validators.pattern("^[0-9]*$"),],
+    telCelular: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
+    callePrincipal: ['', Validators.required],
+    calleSecundaria: ['', Validators.required],
+    numCasaLote: ['', Validators.required],
+    observación: [''],
+    usuario: ['WEB'],
+  });
   }
 
   showDialogToAdd() {
@@ -39,6 +54,19 @@ export class NuevoTramiteComponent implements OnInit {
     this.car = {};
     this.displayDialog = true;
 }
+
+getErrorMessageTelCelular() {
+  return this.thirdFormGroup.controls.telCelular.hasError('pattern') ? 'Ingresar solo números' : '';
+}
+
+getErrorMessageTelConvencional() {
+  return this.thirdFormGroup.controls.telConvencional.hasError('pattern') ? 'Ingresar solo números' : '';
+}
+
+getErrorMessageformularioMatricula() {
+  return this.thirdFormGroup.controls.formularioMatricula.hasError('pattern') ? 'Ingresar solo números' : '';
+}
+
 
 save() {
   let cars = [];
@@ -75,10 +103,26 @@ cloneCar(c: Car): Car {
 }
 
 export interface Car {
-  ramv?;
-  year?;
-  brand?;
-  color?;
-  price?;
-  saleDate?;
+  //persona
+  iden?;
+  nom?;
+  ape?;
+  rzSo?;
+  caPr?;
+  caSe?;
+  nmLt?;
+  mail?;
+  tlCv?;
+  tlCl?;
+  usCr?;
+  esta?;
+  //vehiculo
+  idVh?;
+  idTr?;
+  idPv?;
+  raDu?;
+  grav?;
+  obse?;
+  faDe?;
+  tipo?;
 }

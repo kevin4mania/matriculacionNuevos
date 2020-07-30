@@ -9,7 +9,7 @@
                 </div>
             </div>
         </div>
-        <p-table [columns]="cols" [value]="cars" selectionMode="single" [(selection)]="selectedCar" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
+        <p-table [responsive]=true styleClass="ui-table-matriculacion" [columns]="cols" [value]="cars" selectionMode="single" [(selection)]="selectedCar" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
             <ng-template pTemplate="caption">
                 Listado de vehículos nuevos
             </ng-template>
@@ -28,6 +28,7 @@
                     </td>
                 </tr>
             </ng-template>
+
             <ng-template pTemplate="summary" let-rowData>
                 <div style="text-align:left">
                     <button type="button" pButton icon="fa fa-plus" (click)="showDialogToAdd()" label="Nuevo"></button>
@@ -35,40 +36,134 @@
             </ng-template>
         </p-table>
 
-        <p-dialog header="Car Details" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{width: '300px'}">
-            <div class="ui-g ui-fluid" *ngIf="car">
-                <div class="ui-g-12">
-                    <div class="ui-g-4">
-                        <label for="vin">RAMV/DUI</label>
-                    </div>
-                    <div class="ui-g-8">
-                        <input pInputText id="ramv" [(ngModel)]="car.ramv" />
-                    </div>
+
+        <p-dialog header="Información Vehículo y propietario" [(visible)]="displayDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 
+        'max-height': '80vh','min-height':'250px'}" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+            <div class="row" *ngIf="car">
+                <div class="col-12">
+                    <form [formGroup]="thirdFormGroup" (keydown.enter)="$event.preventDefault()">
+                        <ng-template matStepLabel>Formulario</ng-template>
+                        <div class="row mb-3 mt-3">
+                            <div class="col-md-7">
+                                <mat-card>
+                                    <mat-card-header>
+                                        <mat-card-title>
+                                            Información del Propietario
+                                            <mat-divider></mat-divider>
+                                        </mat-card-title>
+                                    </mat-card-header>
+
+                                    <mat-card-content>
+                                        <div class="row">
+                                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                                <mat-form-field>
+                                                    <mat-label>Número de Cédula</mat-label>
+                                                    <input maxlength="125" formControlName="identificacion" matInput required>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12 col-lg-12 col-xl-6">
+                                                <mat-form-field>
+                                                    <mat-label>Nombres</mat-label>
+                                                    <input maxlength="125" formControlName="nombres" matInput required>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12 col-lg-12 col-xl-6">
+                                                <mat-form-field>
+                                                    <mat-label>Apellidos</mat-label>
+                                                    <input maxlength="125" formControlName="apellidos" matInput required>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12 col-lg-12 col-xl-12">
+                                                <mat-form-field>
+                                                    <mat-label>A favor de</mat-label>
+                                                    <input maxlength="125" formControlName="apellidos" matInput required>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+                                <mat-card class="mt-3 mb-3">
+                                    <mat-card-header>
+                                        <mat-card-title>
+                                            Información de Contacto y Ubicación
+                                            <mat-divider></mat-divider>
+                                        </mat-card-title>
+                                    </mat-card-header>
+                                    <mat-card-content>
+                                        <div class="row">
+                                            <div class="col-md-12 col-lg-12 col-xl-6">
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>Teléfono Convencional</mat-label>
+                                                    <input maxlength="15" formControlName="telConvencional" matInput placeholder="Ex. 023333333">
+                                                    <mat-error *ngIf="thirdFormGroup.controls.telConvencional.invalid">{{getErrorMessageTelConvencional()}}</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12 col-lg-12 col-xl-6">
+                                                <mat-form-field class="example-full-width">
+                                                    <mat-label>Teléfono Celular</mat-label>
+                                                    <input maxlength="15" formControlName="telCelular" matInput placeholder="Ex. 09999999999" required>
+                                                    <mat-error *ngIf="thirdFormGroup.controls.telCelular.invalid">{{getErrorMessageTelCelular()}}</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12 col-lg-12 col-xl-6">
+                                                <mat-form-field>
+                                                    <mat-label>Calle Principal</mat-label>
+                                                    <input maxlength="200" formControlName="callePrincipal" matInput required>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12 col-lg-12 col-xl-6">
+                                                <mat-form-field>
+                                                    <mat-label>Calle Secundaria</mat-label>
+                                                    <input maxlength="200" formControlName="calleSecundaria" matInput required>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12 col-lg-12 col-xl-6">
+                                                <mat-form-field>
+                                                    <mat-label>N° de casa o Lote</mat-label>
+                                                    <input maxlength="60" formControlName="numCasaLote" matInput required>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="row">
+                                    <div class="col-md-12 mb-2">
+
+                                        <mat-card class="mt-3 mb-3">
+                                            <mat-card-header>
+                                                <mat-card-title>
+                                                    Información de Vehículo
+                                                    <mat-divider></mat-divider>
+                                                </mat-card-title>
+                                            </mat-card-header>
+                                            <mat-card-content>
+                                                <mat-form-field>
+                                                    <mat-label>RAMV/DUI</mat-label>
+                                                    <input matInput maxlength="15" formControlName="formularioMatricula" required>
+                                                    <mat-error *ngIf="thirdFormGroup.controls.formularioMatricula.invalid">{{getErrorMessageformularioMatricula()}}</mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field>
+                                                    <mat-label>Gravamen</mat-label>
+                                                    <input matInput maxlength="15" formControlName="formularioMatricula" required>
+                                                    <mat-error *ngIf="thirdFormGroup.controls.formularioMatricula.invalid">{{getErrorMessageformularioMatricula()}}</mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field>
+                                                    <mat-label class="example-full-width">Observaciones</mat-label>
+                                                    <textarea matInput></textarea>
+                                                    <mat-error *ngIf="thirdFormGroup.controls.formularioMatricula.invalid">{{getErrorMessageformularioMatricula()}}</mat-error>
+                                                </mat-form-field>
+                                            </mat-card-content>
+                                        </mat-card>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="ui-g-12">
-                    <div class="ui-g-4">
-                        <label for="year">Year</label>
-                    </div>
-                    <div class="ui-g-8">
-                        <input pInputText id="year" />
-                    </div>
-                </div>
-                <div class="ui-g-12">
-                    <div class="ui-g-4">
-                        <label for="brand">Brand</label>
-                    </div>
-                    <div class="ui-g-8">
-                        <input pInputText id="brand" />
-                    </div>
-                </div>
-                <div class="ui-g-12">
-                    <div class="ui-g-4">
-                        <label for="color">Color</label>
-                    </div>
-                    <div class="ui-g-8">
-                        <input pInputText id="color" />
-                    </div>
-                </div>
+
             </div>
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-helper-clearfix">

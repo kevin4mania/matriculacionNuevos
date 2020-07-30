@@ -35,7 +35,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
-
+import {MatCardModule} from '@angular/material/card';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
 declarations:[
@@ -71,7 +72,9 @@ imports:[
     MatSnackBarModule,
     DialogModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    MatCardModule,
+    MatDividerModule
 ],
 providers: [{ provide: MatPaginatorIntl, useClass: TramitesComponent}], 
 
