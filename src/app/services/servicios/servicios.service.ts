@@ -19,5 +19,13 @@ export class ServiciosService {
     return this.http.post(environment.URL_SERVICIOS+'/tramite/insert',form);
   }
 
+  getTramites(idPc,nmTr,codEst,orderBy,numPage,regxPage){
+    return this.http.get(environment.URL_SERVICIOS+'/tramite/findAllByCriterio/' + idPc + '/' + nmTr+ '/' + codEst + '/' + orderBy + '/' + numPage + '/' + regxPage);
+  }
+
+  getTramiteById(idTr){
+    return this.http.get(environment.URL_SERVICIOS+'/tramite/findById/' +idTr);
+  }
+
 
 }

@@ -36,8 +36,8 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
     return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
   };
 
-  displayedColumns: string[] = ['position', 'name','details'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  displayedColumns: string[] = ['nmTr', 'esta','details'];
+  dataSource = new MatTableDataSource<PeriodicElement>([]);
   horizontalPosition: MatSnackBarHorizontalPosition = 'end';
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';
   
@@ -45,6 +45,7 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
   @ViewChild(MatSort) sort: MatSort;
   
   tramites: any[];
+  numTramites;
   loading = false;
 
   constructor(
@@ -57,8 +58,7 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
   }
 
   ngOnInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.obtenerTramites();
   }
 
   ngAfterViewInit(): void {
@@ -67,6 +67,24 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
 
   public doFilter = (value: string) => {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  obtenerTramites(){
+    this._uiService.loadingCarga(true);
+    this.servicios.getTramites('*', '*', '*', '*', 1, 9999).subscribe((resp: any) => {
+      if (resp.codRetorno == '0001') {
+        this.tramites = resp.retorno;
+        this.numTramites = resp.countRegistros;
+        this._uiService.loadingCarga(false);
+        this.dataSource = new MatTableDataSource<PeriodicElement>(this.tramites)
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      } else {
+        this._uiService.alertErrorMessage('No se pudieron ingresar los datos, intente nuevamente')
+      }
+    }, error => {
+      this._uiService.alertErrorMessage('No se pudieron ingresar los datos, intente nuevamente')
+    });
   }
 
   redirectToDelete = (id: string) => {
@@ -110,9 +128,8 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
           'esta':'GEN',
         }
         this.servicios.createTramite(formTramite).subscribe((resp:any)=>{
-          console.log(resp);
           if(resp.codRetorno=='0001'){
-            this.router.navigate(['/nuevoTramite'])
+            this.router.navigate(['/tramite/'+resp.retorno])
             this._uiService.loadingCarga(false);
           }else{
             this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
@@ -133,15 +150,3 @@ export interface PeriodicElement {
   symbol: string;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 'AMT_MAT_KIA_DC_001', name: 'Iniciado', weight: 1.0079, symbol: 'H'},
-  {position: 'AMT_MAT_KIA_DC_002', name: 'En Proceso', weight: 4.0026, symbol: 'He'},
-  {position: 'AMT_MAT_KIA_DC_003', name: 'Finalizado', weight: 6.941, symbol: 'Li'},
-  {position: 'AMT_MAT_KIA_DC_004', name: 'Finalizado', weight: 9.0122, symbol: 'Be'},
-  {position: 'AMT_MAT_KIA_DC_005', name: 'Finalizado', weight: 10.811, symbol: 'B'},
-  {position: 'AMT_MAT_KIA_DC_006', name: 'Finalizado', weight: 12.0107, symbol: 'C'},
-  {position: 'AMT_MAT_KIA_DC_007', name: 'Finalizado', weight: 14.0067, symbol: 'N'},
-  {position: 'AMT_MAT_KIA_DC_008', name: 'Finalizado', weight: 15.9994, symbol: 'O'},
-  {position: 'AMT_MAT_KIA_DC_009', name: 'Finalizado', weight: 18.9984, symbol: 'F'},
-  {position: 'AMT_MAT_KIA_DC_010', name: 'Finalizado', weight: 20.1797, symbol: 'Ne'},
-];

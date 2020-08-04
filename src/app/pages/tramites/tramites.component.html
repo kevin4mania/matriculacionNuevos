@@ -10,31 +10,31 @@
             <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
                 <!-- Position Column -->
-                <ng-container matColumnDef="position">
+                <ng-container matColumnDef="nmTr">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> No. Trámite</th>
-                    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                    <td mat-cell *matCellDef="let element"> {{element.nmTr}} </td>
                 </ng-container>
 
                 <!-- Name Column -->
-                <ng-container matColumnDef="name">
+                <ng-container matColumnDef="esta">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
                     <td mat-cell *matCellDef="let element">
-                        <span *ngIf="element.name=='Iniciado'" class="badge badge-red text-light"> {{element.name}}</span>
-                        <span *ngIf="element.name=='En Proceso'" class="badge badge-blue text-light"> {{element.name}}</span>
-                        <span *ngIf="element.name=='Finalizado'" class="badge badge-success"> {{element.name}}</span>
+                        <span *ngIf="element.esta=='GEN'" class="badge badge-red text-light"> {{element.esta}}</span>
+                        <span *ngIf="element.esta=='En Proceso'" class="badge badge-blue text-light"> {{element.esta}}</span>
+                        <span *ngIf="element.esta=='Finalizado'" class="badge badge-success"> {{element.esta}}</span>
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="details">
                     <th mat-header-cell *matHeaderCellDef> </th>
                     <td mat-cell *matCellDef="let element" class="text-center">
-                        <button matTooltip="Ver Detalle" mat-icon-button color="primary" (click)="redirectToDetails(element.id)">
+                        <button matTooltip="Ver Detalle" mat-icon-button color="primary" (click)="redirectToDetails(element.idTR)">
                           <mat-icon class="mat-18">description</mat-icon>
                       </button>
-                        <button *ngIf="element.name=='Finalizado'" matTooltip="Generar Sobre" mat-icon-button style="color: #19b5fe;" (click)="redirectToSobre(element.id)">
+                        <button *ngIf="element.name=='Finalizado'" matTooltip="Generar Sobre" mat-icon-button style="color: #19b5fe;" (click)="redirectToSobre(element.idTR)">
                         <mat-icon class="mat-18">local_post_office</mat-icon>
                     </button>
-                        <button *ngIf="element.name!='Finalizado'" matTooltip="Eliminar Trámite" mat-icon-button color="warn" (click)="redirectToDelete(element.id)">
+                        <button *ngIf="element.name!='Finalizado'" matTooltip="Eliminar Trámite" mat-icon-button color="warn" (click)="redirectToDelete(element.idTR)">
                         <mat-icon class="mat-18">delete</mat-icon>
                     </button>
                     </td>
@@ -61,7 +61,7 @@
                     <div class="card-body">
                         <p class="mb-30 bg-red lbl-card"><i class="fas fa-folder-plus"></i> Trámites Iniciados</p>
                         <div class="text-center">
-                            <h2 class="mb-0 d-inline-block text-red">200</h2>
+                            <h2 class="mb-0 d-inline-block text-red">{{numTramites}}</h2>
                             <p class="mb-0 d-inline-block"> Trámites</p>
                         </div>
                     </div>
