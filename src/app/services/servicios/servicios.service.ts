@@ -27,5 +27,9 @@ export class ServiciosService {
     return this.http.get(environment.URL_SERVICIOS+'/tramite/findById/' +idTr);
   }
 
+  getTramiteLisVehPropById(idTr){
+    return this.http.get(environment.URL_SERVICIOS+'/vehiculo/findAllPropVehByTramite/' +idTr);
+  }
+
 
 }
