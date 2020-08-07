@@ -1,23 +1,37 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UiServicesService, ServiciosService } from 'src/app/services/service.index';
+import { trigger,state,style,transition,animate } from '@angular/animations';
+
+declare function validacionIdentificacion(identificacion);
 
 @Component({
   selector: 'app-nuevo-tramite',
   templateUrl: './nuevo-tramite.component.html',
-  styleUrls: ['./nuevo-tramite.component.scss']
+  styleUrls: ['./nuevo-tramite.component.scss'],
+  animations: [
+    trigger('rowExpansionTrigger', [
+        state('void', style({
+            transform: 'translateX(-10%)',
+            opacity: 0
+        })),
+        state('active', style({
+            transform: 'translateX(0)',
+            opacity: 1
+        })),
+        transition('* <=> *', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)'))
+    ])
+]
 })
 export class NuevoTramiteComponent implements OnInit {
-
   displayDialog: boolean;
-  car = {};
-  selectedCar;
-  newCar: boolean;
   cars: any[];
-  cols: any[];
   idTramite;
   tramite = null;
+  loading;
+  formulario: FormGroup;
+
   constructor(
     private activeRoute:ActivatedRoute,
     public _uiService: UiServicesService,
@@ -28,17 +42,8 @@ export class NuevoTramiteComponent implements OnInit {
   ngOnInit() {
     this.idTramite = this.activeRoute.snapshot.paramMap.get('id');
     this.obtenerTramite(this.idTramite);
-    this.cols = [
-     // { field: 'item', header: 'Item' },
-      { field: 'raDu', header: 'RAMV/DUI' },
-      { field: 'grav', header: 'Gravamen' },
-      { field: 'iden', header: 'Identificación' },
-      { field: 'nom', header: 'Nombres' },
-      { field: 'ape', header: 'Apellidos' },
-      { field: 'faDe', header: 'A favor de' },
-  ];
-
-  }
+    this.traerFormulario();
+}
 
   obtenerTramite(idTramite){
     this._uiService.loadingCarga(true);
@@ -46,6 +51,7 @@ export class NuevoTramiteComponent implements OnInit {
         if(resp.codRetorno=='0001')
         {
           this.tramite = resp.retorno.matFTR;
+          this.cars = resp.retorno.lstPropVeh;
           this._uiService.loadingCarga(false);
         }else{
           this._uiService.alertErrorMessage('No se pudieron recuperar los datos, intente nuevamente')
@@ -55,46 +61,109 @@ export class NuevoTramiteComponent implements OnInit {
     });
   }
 
+  traerFormulario(){
+    this.formulario = new FormGroup({
+      matFPV:new FormGroup({
+        idPV:new FormControl('0'),
+        iden:new FormControl('',[Validators.required,this.validacionCedula.bind(this.formulario)]),
+        nom:new FormControl('',Validators.required),
+        ape: new FormControl('',Validators.required),
+        rzSo:new FormControl(''),
+        caPr:new FormControl('',Validators.required),
+        caSe: new FormControl('',Validators.required),
+        nmLt:new FormControl('',Validators.required),
+        mail:new FormControl('',[Validators.required,Validators.email]),
+        tlCv:new FormControl('',Validators.pattern("^[0-9]*$")),
+        tlCl: new FormControl('',[Validators.required,Validators.pattern("^[0-9]*$")]),
+        usCr:new FormControl('dcorral'),
+        esta:new FormControl('ACT'),
+      }),
+      matFVH:new FormGroup({
+        idVH:new FormControl('0'),
+        idTr:new FormControl(this.idTramite),
+        idPv:new FormControl('0'),
+        raDu:new FormControl('',Validators.required),
+        grav:new FormControl('No'),
+        obse:new FormControl(''),
+        faDe:new FormControl(''),
+        tipo:new FormControl('',Validators.required),
+        usCr:new FormControl('dcorral'),
+        esta:new FormControl('ACT'),
+      }),
+    })
+  }
+
+  validacionCedula(control: FormControl) {
+    const numeroIdentificacion: any = control.value;
+    const result = validacionIdentificacion(numeroIdentificacion);
+    if (result) {
+        return null;
+    }
+    return {
+        validacioncedula: true
+    };
+  }
+
 
   showDialogToAdd() {
-    this.newCar = true;
-    this.car = {};
     this.displayDialog = true;
   }
 
 
 save() {
-  let cars = [];
+  this._uiService.loadingCarga(true);
+  this.servicios.createVehProp(this.formulario.value).subscribe((resp:any)=>{
+    if(resp.codRetorno=='0001')
+      {
+        this.displayDialog = false;
+        this._uiService.loadingCarga(false);
+        this.obtenerTramite(this.idTramite);
+        this.traerFormulario();
+        this._uiService.alertConfirmMessage("Formulario ingresado correctamente")
+      }
+    else{
+      this._uiService.alertErrorMessage('No se pudieron ingresar los datos, intente nuevamente')
+    }  
+  }, error => {
+    this._uiService.alertErrorMessage('No se pudieron ingresar los datos, intente nuevamente')
+  })
+}
 
-  if (this.newCar){
-      cars.push(this.car);
+getErrorMessageCedula() {
+  if (this.formulario.controls.matFPV['controls'].iden.hasError('required')) {
+    return 'Cédula es un campo requerido';
   }
-  else
-      cars[this.cars.indexOf(this.selectedCar)] = this.car;
 
-  this.cars = cars;
-  console.log(this.cars)
-  this.car = null;
-  this.displayDialog = false;
+  return this.formulario.controls.matFPV['controls'].iden.hasError('validacioncedula') ? 'No es una cédula válida' : '';
+}
+
+getErrorMessageCorreo() {
+  if (this.formulario.controls.matFPV['controls'].mail.hasError('required')) {
+    return 'Correo es un campo requerido';
+  }
+
+  return this.formulario.controls.matFPV['controls'].mail.hasError('email') ? 'No es un correo válido' : '';
 }
 
 delete() {
 
 }
 
-onRowSelect(event) {
-  this.newCar = false;
-  this.car = this.cloneCar(event.data);
-  console.log(this.car);
-  this.displayDialog = true;
-}
 
-cloneCar(c) {
-  let car = {};
-  for (let prop in c) {
-      car[prop] = c[prop];
-  }
-  return car;
+editarPropVeh(idPro){
+  this._uiService.loadingCarga(true);
+  this.servicios.getProVehById(idPro).subscribe((resp: any) => {
+      if(resp.codRetorno=='0001')
+      {
+        console.log(resp)
+        this.displayDialog = true;
+        this._uiService.loadingCarga(false);
+      }else{
+        this._uiService.alertErrorMessage('No se pudieron recuperar los datos, intente nuevamente')
+      }
+  }, error => {
+    this._uiService.alertErrorMessage('No se pudieron recuperar los datos, intente nuevamente')
+  });
 }
 
 }

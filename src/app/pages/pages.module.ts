@@ -37,7 +37,9 @@ import {ButtonModule} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
 import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
-
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatSelectModule} from '@angular/material/select';
+import {MatRadioModule} from '@angular/material/radio';
 @NgModule({
 declarations:[
     PagesComponent,
@@ -74,7 +76,10 @@ imports:[
     ButtonModule,
     InputTextModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatRadioModule
 ],
 providers: [{ provide: MatPaginatorIntl, useClass: TramitesComponent}], 
 

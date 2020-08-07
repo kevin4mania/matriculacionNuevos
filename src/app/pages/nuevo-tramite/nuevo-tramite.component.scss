@@ -1,4 +1,4 @@
-:host ::ng-deep .ui-table-matriculacion {
+:host ::ng-deep .ui-table-customers {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
     .customer-badge {
         border-radius: 2px;
@@ -7,17 +7,13 @@
         font-weight: 700;
         font-size: 12px;
         letter-spacing: .3px;
-        &.status-EXONERADO {
+        &.status-Si {
             background-color: #C8E6C9;
             color: #256029;
         }
-        &.status-RENOVACION {
+        &.status-No {
             background-color: #FFCDD2;
             color: #C63737;
-        }
-        &.status-CAMBIO {
-            background-color: #FEEDAF;
-            color: #8A5340;
         }
     }
     .flag {
@@ -62,7 +58,7 @@
     .ui-table-globalfilter-container {
         float: right;
         input {
-            width: 250px;
+            width: 200px;
         }
     }
     .ui-datepicker {
@@ -84,15 +80,19 @@
     .ui-table-thead>tr>th {
         border: 0 none;
         text-align: left;
+        &.ui-filter-column {
+            border-top: 1px solid #c8c8c8;
+        }
     }
     .ui-table-tbody>tr>td {
         border: 0 none;
+        cursor: auto;
     }
     .ui-dropdown-label:not(.ui-placeholder) {
         text-transform: uppercase;
     }
     .ui-table-tbody>tr>td .ui-column-title {
-        display: visibility;
+        display: none;
     }
 }
 
@@ -101,7 +101,7 @@
 
 @media screen and (max-width: 64em) {
      :host ::ng-deep .ui-table {
-        .ui-table-matriculacion {
+        &.ui-table-customers {
             .ui-table-thead>tr>th,
             .ui-table-tfoot>tr>td {
                 display: none !important;
@@ -115,8 +115,6 @@
                 clear: left;
                 border: 0 none;
                 .ui-column-title {
-                    display: inline-block;
-                    vertical-align: middle;
                     padding: .4em;
                     min-width: 30%;
                     display: inline-block;
@@ -130,4 +128,19 @@
 
 .example-full-width {
     width: 100%;
+}
+
+.example-h2 {
+    margin: 10px;
+}
+
+.example-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+}
+
+.example-margin {
+    margin: 0 10px;
 }
