@@ -27,6 +27,7 @@ declare function validacionIdentificacion(identificacion);
 export class NuevoTramiteComponent implements OnInit {
   displayDialog: boolean;
   cars: any[];
+  newCar: boolean;
   idTramite;
   tramite = null;
   loading;
@@ -64,6 +65,7 @@ export class NuevoTramiteComponent implements OnInit {
   traerFormulario(){
     this.formulario = new FormGroup({
       matFPV:new FormGroup({
+        tipoIden:new FormControl('1',Validators.required),
         idPV:new FormControl('0'),
         iden:new FormControl('',[Validators.required,this.validacionCedula.bind(this.formulario)]),
         nom:new FormControl('',Validators.required),
@@ -104,14 +106,47 @@ export class NuevoTramiteComponent implements OnInit {
     };
   }
 
-
   showDialogToAdd() {
+    this.traerFormulario();
     this.displayDialog = true;
+    this.newCar = true;
   }
 
+  setTipoIdentificacion(tipoIden){
+    if(tipoIden=='1'){
+      this.formulario.controls.matFPV['controls'].nom.setValidators([
+        Validators.required
+      ]);
+      this.formulario.controls.matFPV['controls'].ape.setValidators([
+        Validators.required
+      ]);
+      this.formulario.controls.matFPV['controls'].rzSo.setValidators([]);
+      this.formulario.controls.matFPV['controls'].rzSo.value = "";
+
+      this.formulario.controls.matFPV['controls'].nom.updateValueAndValidity();
+      this.formulario.controls.matFPV['controls'].ape.updateValueAndValidity();
+      this.formulario.controls.matFPV['controls'].rzSo.updateValueAndValidity();
+    }else{
+      this.formulario.controls.matFPV['controls'].rzSo.setValidators([
+        Validators.required
+      ]);
+      this.formulario.controls.matFPV['controls'].nom.setValidators([]);
+      this.formulario.controls.matFPV['controls'].ape.setValidators([]);
+
+      this.formulario.controls.matFPV['controls'].nom.value = "";
+      this.formulario.controls.matFPV['controls'].ape.value = "";
+
+      this.formulario.controls.matFPV['controls'].nom.updateValueAndValidity();
+      this.formulario.controls.matFPV['controls'].ape.updateValueAndValidity();
+      this.formulario.controls.matFPV['controls'].rzSo.updateValueAndValidity();
+    }
+  }
+
+  
 
 save() {
   this._uiService.loadingCarga(true);
+  delete this.formulario.value.matFPV.tipoIden;
   this.servicios.createVehProp(this.formulario.value).subscribe((resp:any)=>{
     if(resp.codRetorno=='0001')
       {
@@ -129,6 +164,82 @@ save() {
   })
 }
 
+edit(){
+    this._uiService.loadingCarga(true);
+    delete this.formulario.value.matFPV.tipoIden;
+    this.servicios.editVehProp(this.formulario.value).subscribe((resp:any)=>{
+      if(resp.codRetorno=='0001')
+        {
+          this.displayDialog = false;
+          this._uiService.loadingCarga(false);
+          this.obtenerTramite(this.idTramite);
+          this.traerFormulario();
+          this._uiService.alertConfirmMessage("Formulario actualizado correctamente")
+        }
+      else{
+        this._uiService.alertErrorMessage('No se pudieron ingresar los datos, intente nuevamente')
+      }  
+    }, error => {
+      this._uiService.alertErrorMessage('No se pudieron ingresar los datos, intente nuevamente')
+    })
+}
+
+
+
+delete() {
+
+}
+
+
+editarPropVeh(idPro){
+  this.newCar = false;
+  this._uiService.loadingCarga(true);
+  this.servicios.getProVehById(idPro).subscribe((resp: any) => {
+      if(resp.codRetorno=='0001')
+      {
+        let vehProp = resp.retorno;
+        this.displayDialog = true;
+        this._uiService.loadingCarga(false);
+        this.formulario = new FormGroup({
+          matFPV:new FormGroup({
+            tipoIden:new FormControl(vehProp.matFPV.rzSo==""?'1':'2'),
+            idPV:new FormControl(vehProp.matFPV.idPV),
+            iden:new FormControl(vehProp.matFPV.iden,[Validators.required,this.validacionCedula.bind(this.formulario)]),
+            nom:new FormControl(vehProp.matFPV.nom),
+            ape: new FormControl(vehProp.matFPV.ape),
+            rzSo:new FormControl(vehProp.matFPV.rzSo),
+            caPr:new FormControl(vehProp.matFPV.caPr,Validators.required),
+            caSe: new FormControl(vehProp.matFPV.caSe,Validators.required),
+            nmLt:new FormControl(vehProp.matFPV.nmLt,Validators.required),
+            mail:new FormControl(vehProp.matFPV.mail,[Validators.required,Validators.email]),
+            tlCv:new FormControl(vehProp.matFPV.tlCv,Validators.pattern("^[0-9]*$")),
+            tlCl: new FormControl(vehProp.matFPV.tlCl,[Validators.required,Validators.pattern("^[0-9]*$")]),
+            usCr:new FormControl(vehProp.matFPV.usCr),
+            esta:new FormControl(vehProp.matFPV.esta),
+          }),
+          matFVH:new FormGroup({
+            idVH:new FormControl(vehProp.matFVH.idVH),
+            idTr:new FormControl(this.idTramite),
+            idPv:new FormControl(vehProp.matFVH.idPv),
+            raDu:new FormControl(vehProp.matFVH.raDu,Validators.required),
+            grav:new FormControl(vehProp.matFVH.grav),
+            obse:new FormControl(vehProp.matFVH.obse),
+            faDe:new FormControl(vehProp.matFVH.faDe),
+            tipo:new FormControl(vehProp.matFVH.tipo,Validators.required),
+            usCr:new FormControl(vehProp.matFVH.usCr),
+            esta:new FormControl(vehProp.matFVH.esta),
+          }),
+        })
+
+       
+      }else{
+        this._uiService.alertErrorMessage('No se pudieron recuperar los datos, intente nuevamente')
+      }
+  }, error => {
+    this._uiService.alertErrorMessage('No se pudieron recuperar los datos, intente nuevamente')
+  });
+}
+
 getErrorMessageCedula() {
   if (this.formulario.controls.matFPV['controls'].iden.hasError('required')) {
     return 'Cédula es un campo requerido';
@@ -143,27 +254,6 @@ getErrorMessageCorreo() {
   }
 
   return this.formulario.controls.matFPV['controls'].mail.hasError('email') ? 'No es un correo válido' : '';
-}
-
-delete() {
-
-}
-
-
-editarPropVeh(idPro){
-  this._uiService.loadingCarga(true);
-  this.servicios.getProVehById(idPro).subscribe((resp: any) => {
-      if(resp.codRetorno=='0001')
-      {
-        console.log(resp)
-        this.displayDialog = true;
-        this._uiService.loadingCarga(false);
-      }else{
-        this._uiService.alertErrorMessage('No se pudieron recuperar los datos, intente nuevamente')
-      }
-  }, error => {
-    this._uiService.alertErrorMessage('No se pudieron recuperar los datos, intente nuevamente')
-  });
 }
 
 }

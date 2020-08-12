@@ -67,8 +67,11 @@
                             <td>
                                 <span class="ui-column-title">Identificación</span> {{customer.matFPV.iden}}
                             </td>
-                            <td>
+                            <td *ngIf="customer.matFPV.rzSo==''">
                                 <span class="ui-column-title">Propietario</span> {{customer.matFPV.nom}} {{customer.matFPV.ape}}
+                            </td>
+                            <td *ngIf="customer.matFPV.rzSo!=''">
+                                <span class="ui-column-title">Propietario</span> {{customer.matFPV.rzSo}}
                             </td>
                             <td>
                                 <span class="ui-column-title">A favor de</span> {{customer.matFVH.faDe}}
@@ -95,8 +98,9 @@
 
                                                                 <strong class="mb-0">Identificación</strong>
                                                                 <h6 class="pt-0 pb-10"> {{customer.matFPV.iden}}</h6>
-                                                                <strong class="mb-0">Nombres Propietario</strong>
-                                                                <h6 class="pt-0 pb-10"> {{customer.matFPV.nom}} {{customer.matFPV.ape}}</h6>
+                                                                <strong class="mb-0">Propietario</strong>
+                                                                <h6 class="pt-0 pb-10" *ngIf="customer.matFPV.rzSo==''"> {{customer.matFPV.nom}} {{customer.matFPV.ape}}</h6>
+                                                                <h6 class="pt-0 pb-10" *ngIf="customer.matFPV.rzSo!=''"> {{customer.matFPV.rzSo}}</h6>
                                                                 <strong class="mb-0">Dirección Domiciliaria</strong>
                                                                 <h6 class="pt-0 pb-10">{{customer.matFPV.caPr}} y {{customer.matFPV.caSe}}, {{customer.matFPV.nmLt}} </h6>
                                                                 <strong class="mb-0">A favor de</strong>
@@ -173,7 +177,7 @@
 
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td colspan="7" style="text-align:left">No se encontro ningun registro.</td>
+                            <td colspan="7" style="text-align:left">No hay ningun vehículo asignado a este trámite.</td>
                         </tr>
                     </ng-template>
                 </p-table>
@@ -197,28 +201,37 @@
                                 <mat-card-content>
                                     <div class="row">
                                         <div class="col-md-12 col-lg-12 col-xl-6" formGroupName="matFPV">
+                                            <mat-form-field class="example-full-width" appearance="fill">
+                                                <mat-label>Tipo de Indentificación</mat-label>
+                                                <select matNativeControl #tipoIden formControlName="tipoIden" (change)="setTipoIdentificacion(tipoIden.value)" required>
+                                                    <option value="1" selected>Persona Natural</option>
+                                                    <option value="2">Empresa</option>
+                                                  </select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12 col-xl-6" formGroupName="matFPV">
                                             <mat-form-field>
-                                                <mat-label>Número de Cédula</mat-label>
+                                                <mat-label>Número de Cédula o RUC</mat-label>
                                                 <input maxlength="13" formControlName="iden" matInput required>
                                                 <mat-error *ngIf="formulario.controls.matFPV['controls'].iden.invalid">{{getErrorMessageCedula()}}</mat-error>
                                             </mat-form-field>
                                         </div>
-                                        <div class="col-md-12 col-lg-12 col-xl-6" formGroupName="matFPV">
+                                        <div class="col-md-12 col-lg-12 col-xl-12" formGroupName="matFPV" *ngIf="formulario.controls.matFPV['controls'].tipoIden.value =='2'">
                                             <mat-form-field class="example-full-width">
                                                 <mat-label>Razon Social</mat-label>
                                                 <input maxlength="125" formControlName="rzSo" matInput>
                                             </mat-form-field>
                                         </div>
-                                        <div class="col-md-12 col-lg-12 col-xl-6" formGroupName="matFPV">
+                                        <div class="col-md-12 col-lg-12 col-xl-6" formGroupName="matFPV" *ngIf="formulario.controls.matFPV['controls'].tipoIden.value =='1'">
                                             <mat-form-field class="example-full-width">
                                                 <mat-label>Nombres</mat-label>
-                                                <input maxlength="125" formControlName="nom" matInput required>
+                                                <input maxlength="125" formControlName="nom" matInput>
                                             </mat-form-field>
                                         </div>
-                                        <div class="col-md-12 col-lg-12 col-xl-6" formGroupName="matFPV">
+                                        <div class="col-md-12 col-lg-12 col-xl-6" formGroupName="matFPV" *ngIf="formulario.controls.matFPV['controls'].tipoIden.value =='1'">
                                             <mat-form-field class="example-full-width">
                                                 <mat-label>Apellidos</mat-label>
-                                                <input maxlength="125" formControlName="ape" matInput required>
+                                                <input maxlength="125" formControlName="ape" matInput>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-md-12 col-lg-12 col-xl-12" formGroupName="matFVH">
@@ -335,7 +348,8 @@
             </div>
             <p-footer>
                 <div class="ui-dialog-buttonpane ui-helper-clearfix ">
-                    <button type="button" [disabled]="formulario.invalid" pButton icon="fa fa-check " (click)="save()" label="Guardar"></button>
+                    <button type="button" [disabled]="formulario.invalid" pButton icon="fa fa-check " *ngIf="newCar" (click)="save()" label="Guardar"></button>
+                    <button type="button" [disabled]="formulario.invalid" pButton icon="fa fa-check " *ngIf="!newCar" (click)="edit()" label="Actualizar"></button>
                 </div>
             </p-footer>
         </p-dialog>
