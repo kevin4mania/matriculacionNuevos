@@ -12,11 +12,13 @@ import 'rxjs/add/operator/catch';
   providedIn: 'root'
 })
 export class UsuarioService {
-  rol: string;
+
   usuario: string;
-  menu: any[] = [];
-  persona: {};
-  keyApp = '_'+environment.nombreAplicaion + '_' + parseInt(environment.idAplicacion);
+  persona;
+  sucursal;
+  consecionario;
+  asistente;
+  keyApp = '_mnuevos'
 
   constructor(
     private http:HttpClient,
@@ -27,42 +29,44 @@ export class UsuarioService {
    }
 
   cargarStorage() {
-    if ( JSON.parse(localStorage.getItem('key'+this.keyApp)) == this.keyApp && localStorage.getItem('login'+this.keyApp)) {
+    if (localStorage.getItem('login'+this.keyApp)) {
       this.usuario = localStorage.getItem('login'+this.keyApp);
-      this.menu = JSON.parse( localStorage.getItem('menu'+this.keyApp));
-      this.rol = localStorage.getItem('rol'+this.keyApp);
+      this.asistente = JSON.parse( localStorage.getItem('asistente'+this.keyApp));
       this.persona = JSON.parse( localStorage.getItem('persona'+this.keyApp));
+      this.sucursal = JSON.parse( localStorage.getItem('sucursal'+this.keyApp));
+      this.consecionario = JSON.parse( localStorage.getItem('consecionario'+this.keyApp));
     } else {
       this.usuario = "";
-      this.menu = [];
-      this.rol="";
+      this.asistente = [];
       this.persona = [];
+      this.sucursal = [];
+      this.consecionario = [];
     }
   }
 
   logout() {
+    this.asistente = [];
     this.usuario = "";
-    this.menu = [];
-    this.rol = "";
     this.persona = [];
-    
-    localStorage.removeItem('login'+this.keyApp);
-    localStorage.removeItem('menu'+this.keyApp);
-    localStorage.removeItem('rol'+this.keyApp);
-    localStorage.removeItem('key'+this.keyApp);
+    this.sucursal = [];
+    this.consecionario = [];
+
+    localStorage.removeItem('asistente'+this.keyApp);
     localStorage.removeItem('persona'+this.keyApp);
-    
+    localStorage.removeItem('sucursal'+this.keyApp);
+    localStorage.removeItem('consecionario'+this.keyApp);
+    localStorage.removeItem('login'+this.keyApp);
     this.router.navigate(['/login']);
   }
 
   login(usuario: Usuario, recordar: boolean = false){
     this.recordarUser(recordar,usuario);
-    let url = environment.URL_SERVICIOS_SEGURIDAD + '/login/';
-    return this.http.get(url+usuario.usuario.toUpperCase()+"/"+usuario.password+"/"+environment.idAplicacion)
+    let url = environment.URL_SERVICIOS + '/usuario/login/';
+    return this.http.get(url+usuario.usuario+"/"+usuario.password)
     .map((respLogin:any)=>{
       if(respLogin.codRetorno == '0001'){
         let respuestaLogin = respLogin.retorno;
-        this.guardarStorage(respuestaLogin.usuario.usuario, respuestaLogin.lsMenu, respuestaLogin.perfil.nombrePerfil, respuestaLogin.cabeceraPersona);
+        this.guardarStorage(respuestaLogin.matFUC,respuestaLogin.matFPC,respuestaLogin.matFSC,respuestaLogin.matFCN);
         return true;
       }else{
         this._uiService.alertErrorMessage('Usuario y/o contraseña inválidos');
@@ -82,17 +86,18 @@ export class UsuarioService {
     }
   }
 
-  guardarStorage( usuario:string, menu:any, rol:string, persona:any ) {
-    localStorage.setItem('key'+this.keyApp, JSON.stringify(this.keyApp));
-    localStorage.setItem('login'+this.keyApp, usuario);
-    localStorage.setItem('menu'+this.keyApp, JSON.stringify(menu));
-    localStorage.setItem('rol'+this.keyApp, rol);
+  guardarStorage( usuario,persona,sucursal,consecionario) {
+    localStorage.setItem('asistente'+this.keyApp, JSON.stringify(usuario) );
     localStorage.setItem('persona'+this.keyApp, JSON.stringify(persona) );
+    localStorage.setItem('sucursal'+this.keyApp, JSON.stringify(sucursal) );
+    localStorage.setItem('consecionario'+this.keyApp, JSON.stringify(consecionario) );
+    localStorage.setItem('login'+this.keyApp,  usuario['logi']);
 
-    this.usuario = usuario;
-    this.menu = menu;
-    this.rol = rol;
+    this.asistente = usuario;
     this.persona = persona;
+    this.sucursal = sucursal;
+    this.consecionario = consecionario;
+    this.usuario= usuario['logi'];
   }
 
   estaLogueado(){
