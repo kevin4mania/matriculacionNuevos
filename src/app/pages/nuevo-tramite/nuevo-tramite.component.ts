@@ -187,7 +187,43 @@ edit(){
 
 
 delete() {
+  this.formulario.value.matFPV.esta = 'INA';
+  this.formulario.value.matFVH.esta = 'INA';
+  delete this.formulario.value.matFPV.tipoIden;
+  console.log(this.formulario.value);
+  this.servicios.deleteVehProp(this.formulario.value).subscribe((resp:any)=>{
+    if(resp.codRetorno=='0001')
+      {
+        this.displayDialog = false;
+        this._uiService.loadingCarga(false);
+        this.obtenerTramite(this.idTramite);
+        this.traerFormulario();
+        this._uiService.alertConfirmMessage("Vehículo y propietario eliminado correctamente")
+      }
+    else{
+      this._uiService.alertErrorMessage('No se pudieron ingresar los datos, intente nuevamente')
+    }  
+  }, error => {
+    this._uiService.alertErrorMessage('No se pudieron ingresar los datos, intente nuevamente')
+  })
+}
 
+changeAFavDe(val){
+  if(val=="Si"){
+    this.formulario.controls.matFVH['controls'].faDe.setValidators([
+      Validators.required
+    ]);
+    this.formulario.controls.matFVH['controls'].obse.setValidators([
+      Validators.required
+    ]);
+    this.formulario.controls.matFVH['controls'].faDe.updateValueAndValidity();
+    this.formulario.controls.matFVH['controls'].obse.updateValueAndValidity();
+  }else{
+    this.formulario.controls.matFVH['controls'].faDe.setValidators([]);
+    this.formulario.controls.matFVH['controls'].obse.setValidators([]);
+    this.formulario.controls.matFVH['controls'].faDe.updateValueAndValidity();
+    this.formulario.controls.matFVH['controls'].obse.updateValueAndValidity();
+  }
 }
 
 

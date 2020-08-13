@@ -39,6 +39,9 @@ export class ServiciosService {
     return this.http.post(environment.URL_SERVICIOS+'/propietario/updateProVeh',form);
   }
 
+  deleteVehProp(form){
+    return this.http.post(environment.URL_SERVICIOS+'/propietario/updateProVeh',form);
+  }
 
   getProVehById(idPV){
     return this.http.get(environment.URL_SERVICIOS+'/propietario/findProVehById/' +idPV);
