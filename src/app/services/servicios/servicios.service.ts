@@ -47,4 +47,16 @@ export class ServiciosService {
     return this.http.get(environment.URL_SERVICIOS+'/propietario/findProVehById/' +idPV);
   }
 
+  finalizarTramite(form){
+    return this.http.post(environment.URL_SERVICIOS+'/tramite/update',form);
+  }
+
+  getPersonasByIdSucursal(idSucursal){
+    return this.http.get(environment.URL_SERVICIOS+'/persona/findAllByCriterio/'+idSucursal+'/*/*/*/*/1/20');
+  }
+
+  getReporte(id,tipo,aux){
+    window.open(environment.URL_REPORTE+'/ReporteServlet?id='+id+'&tipo='+tipo+'&aux='+aux)
+  }
+
 }
