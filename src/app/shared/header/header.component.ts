@@ -11,7 +11,7 @@ export class HeaderComponent implements OnInit {
   constructor(public _usuarioService : UsuarioService) { }
 
   ngOnInit() {
-    this.nombre = this._usuarioService.persona['nombrePersona']+' '+this._usuarioService.persona['apellidoPersona']
+    this.nombre = this._usuarioService.persona.nom+' '+this._usuarioService.persona.ape;
   }
 
 }

@@ -1,7 +1,7 @@
 <div class="app-sidebar colored">
     <div class="sidebar-header">
         <a class="header-brand" routerLink="">
-            <span class="text" style="font-size: 18px; align-content: center">KIA MOTORS S.A</span>
+            <span class="text" style="font-size: 18px; align-content: center">{{_usuarioService.consecionario.nom}}</span>
         </a>
         <button id="sidebarClose" class="nav-close"><i class="ik ik-x"></i></button>
     </div>
@@ -9,9 +9,9 @@
     <div class="sidebar-content">
         <div class="nav-container">
             <nav id="main-menu-navigation" class="navigation-main">
-                <div class="nav-lavel">
+                <!-- <div class="nav-lavel">
                     <img src="assets/img/sidebar/kia.jpg" width="200px" alt="">
-                </div>
+                </div>-->
 
                 <div class="nav-item" [ngClass]="{'has-sub':menu.submenu.length >0}" routerLinkActive="active open" *ngFor="let menu of _sidebar.menu">
                     <a *ngIf="menu.submenu.length >0"><i [class]="menu.icono"></i><span>{{menu.titulo}}</span></a>
