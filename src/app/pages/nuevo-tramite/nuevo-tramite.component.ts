@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { UiServicesService, ServiciosService } from 'src/app/services/service.index';
+import { UiServicesService, ServiciosService, UsuarioService } from 'src/app/services/service.index';
 import { trigger,state,style,transition,animate } from '@angular/animations';
 import Swal from 'sweetalert2'
 import { Router } from '@angular/router';
+import * as CryptoJS from 'crypto-js';
 
 declare function validacionIdentificacion(identificacion);
 
@@ -27,6 +28,7 @@ declare function validacionIdentificacion(identificacion);
 ]
 })
 export class NuevoTramiteComponent implements OnInit {
+  tokenFromUI: string = "0123456789123456";
   displayDialog: boolean;
   cars: any[];
   newCar: boolean;
@@ -42,11 +44,15 @@ export class NuevoTramiteComponent implements OnInit {
     public _uiService: UiServicesService,
     public servicios: ServiciosService,
     public router: Router,
+    public usuario:UsuarioService,
   ) {  
   }
 
   ngOnInit() {
-    this.idTramite = this.activeRoute.snapshot.paramMap.get('id');
+    var reb64 = CryptoJS.enc.Hex.parse(this.activeRoute.snapshot.paramMap.get('id'));
+    var bytes = reb64.toString(CryptoJS.enc.Base64);
+    var decrypt = CryptoJS.AES.decrypt(bytes, this.tokenFromUI);
+    this.idTramite = decrypt.toString(CryptoJS.enc.Utf8);
     this.obtenerTramite(this.idTramite);
     this.traerFormulario();
 }
@@ -56,8 +62,9 @@ export class NuevoTramiteComponent implements OnInit {
     this.servicios.getTramiteLisVehPropById(idTramite).subscribe((resp: any) => {
         if(resp.codRetorno=='0001')
         {
+          console.log(resp.retorno);
           this.tramite = resp.retorno.matFTR;
-          this.getSucursalesByIdPersona(9);
+          this.getSucursalesByIdPersona(this.usuario.sucursal.idSC);
           this.cars = resp.retorno.lstPropVeh;
           this._uiService.loadingCarga(false);
         }else{
@@ -83,7 +90,7 @@ export class NuevoTramiteComponent implements OnInit {
         mail:new FormControl('',[Validators.required,Validators.email]),
         tlCv:new FormControl('',Validators.pattern("^[0-9]*$")),
         tlCl: new FormControl('',[Validators.required,Validators.pattern("^[0-9]*$")]),
-        usCr:new FormControl('dcorral'),
+        usCr:new FormControl(this.usuario.usuario),
         esta:new FormControl('ACT'),
       }),
       matFVH:new FormGroup({
@@ -95,7 +102,7 @@ export class NuevoTramiteComponent implements OnInit {
         obse:new FormControl(''),
         faDe:new FormControl(''),
         tipo:new FormControl('',Validators.required),
-        usCr:new FormControl('dcorral'),
+        usCr:new FormControl(this.usuario.usuario),
         esta:new FormControl('ACT'),
       }),
     })
@@ -103,7 +110,7 @@ export class NuevoTramiteComponent implements OnInit {
     this.formularioTramite = new FormGroup({
         idTR:new FormControl(this.idTramite),
         idPc:new FormControl('',Validators.required),
-        usCr:new FormControl('dcorral'),
+        usCr:new FormControl(this.usuario.usuario),
         esta:new FormControl('CHG'),
     })
   }
@@ -256,7 +263,6 @@ finalizarTramite(){
       this._uiService.loadingCarga(true);
       this.servicios.finalizarTramite(this.formularioTramite.value).subscribe((resp:any)=>{
         if(resp.codRetorno=='0001'){
-         // this.router.navigate(['/tramites'])
           this.obtenerTramite(this.idTramite);
           this._uiService.loadingCarga(false);
         }else{
@@ -309,8 +315,6 @@ editarPropVeh(idPro){
             esta:new FormControl(vehProp.matFVH.esta),
           }),
         })
-
-       
       }else{
         this._uiService.alertErrorMessage('No se pudieron recuperar los datos, intente nuevamente')
       }

@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'
 import { Router } from '@angular/router';
 import {MatSnackBar, MatSnackBarVerticalPosition, MatSnackBarHorizontalPosition} from '@angular/material/snack-bar';
 import { UiServicesService, ServiciosService,UsuarioService } from 'src/app/services/service.index';
-
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-tramites',
@@ -16,7 +16,7 @@ import { UiServicesService, ServiciosService,UsuarioService } from 'src/app/serv
   encapsulation: ViewEncapsulation.None 
 })
 export class TramitesComponent extends MatPaginatorIntl implements OnInit, AfterViewInit  {
-  
+  tokenFromUI: string = "0123456789123456";
   itemsPerPageLabel = 'Items por página'; 
   nextPageLabel  = 'Página Siguiente'; 
   firstPageLabel = 'Primera Página';
@@ -75,7 +75,7 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
 
   obtenerTramites(){
     this._uiService.loadingCarga(true);
-    this.servicios.getTramites('*', '*', 'GEN',this.userInfo['logi'],'*', 1, 9999).subscribe((resp: any) => {
+    this.servicios.getTramites('*', '*', '*',this.usuario.usuario,'*', 1, 9999).subscribe((resp: any) => {
       if (resp.codRetorno == '0001') {
         this.tramites = resp.retorno;
         this.numTramites = resp.countRegistros;
@@ -92,10 +92,10 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
   }
 
   redirectToDelete = (id: string) => {
-    this.servicios.deleteTramite(id,this.userInfo['logi']).subscribe((resp:any)=>{
+    this.servicios.deleteTramite(id,this.usuario.usuario).subscribe((resp:any)=>{
       if(resp.codRetorno=='0001'){
         let snackBarRef = this._snackBar.open('Trámite eliminado', 'Deshacer', {
-          duration: 5000,
+          duration: 7000,
           horizontalPosition: this.horizontalPosition,
           verticalPosition: this.verticalPosition,
           panelClass:['customClass']
@@ -115,7 +115,7 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
   }
 
   recuperarTramite(id){
-    this.servicios.recuperarTramite(id,this.userInfo['logi']).subscribe((resp:any)=>{
+    this.servicios.recuperarTramite(id,this.usuario.usuario).subscribe((resp:any)=>{
       if(resp.codRetorno=='0001'){
         this.obtenerTramites();
         this._uiService.loadingCarga(false);
@@ -136,7 +136,10 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
   }
 
   redirectToDetails = (id: string) => {
-    this.router.navigate(['/tramite/'+id])
+    var b64 = CryptoJS.AES.encrypt(id.toString(), this.tokenFromUI).toString();
+    var e64 = CryptoJS.enc.Base64.parse(b64);
+    var encriptado = e64.toString(CryptoJS.enc.Hex);
+    this.router.navigate(['/tramite/'+encriptado])
   }
 
   redirectToNewTramite = () => {
@@ -154,12 +157,15 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
           'idTR':'0',
           'idPc':this.userInfo['idPc'],
           'nmTr':'',
-          'usCr':this.userInfo['logi'],
+          'usCr':this.usuario.usuario,
           'esta':'GEN',
         }
         this.servicios.createTramite(formTramite).subscribe((resp:any)=>{
           if(resp.codRetorno=='0001'){
-            this.router.navigate(['/tramite/'+resp.retorno])
+            var b64 = CryptoJS.AES.encrypt(resp.retorno.toString(), this.tokenFromUI).toString();
+            var e64 = CryptoJS.enc.Base64.parse(b64);
+            var encriptado = e64.toString(CryptoJS.enc.Hex);
+            this.router.navigate(['/tramite/'+encriptado])
             this._uiService.loadingCarga(false);
           }else{
             this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
