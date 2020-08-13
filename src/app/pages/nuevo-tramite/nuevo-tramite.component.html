@@ -3,25 +3,37 @@
         <div class="row">
             <div class="col-lg-3 col-md-12 col-sm-12">
                 <div class="widget border border-primary" *ngIf="tramite !=null">
-                    <div class="widget-body">
+                    <div class="widget-body" [formGroup]="formularioTramite">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="state">
                                 <strong class="mb-0"> Número de Trámite</strong>
                                 <h6 class="pt-0 pb-10">{{tramite.nmTr}}</h6>
                                 <strong class="mb-0"> Usuario Creador</strong>
-                                <h6 class="pt-0 pb-10">{{tramite.usCr}}</h6>
-                                <strong class="mb-0">Fecha de Creación</strong>
+                                <h6 class="pt-0 pb-10">{{tramite.usCr}} {{tramite.idPc}}</h6>
+                                <strong class="mb-0">Fecha de Elaboración</strong>
                                 <h6 class="pt-0 pb-10">{{tramite.feCr | date:"MM/dd/yyyy"}}</h6>
+                                <strong *ngIf="cars.length>0" class="mb-0">Gestor Autorizado</strong>
+                                <mat-form-field class="example-full-width" appearance="fill" *ngIf="tramite.esta=='GEN' && cars.length>0">
+                                    <select matNativeControl formControlName="idPc" required>
+                                        <option selected disabled value="">Seleccionar Gestor</option>
+                                        <option *ngFor="let gestor of gestores" value="{{gestor.idPC}}" >{{gestor.nom}} {{gestor.ape}}</option>
+                                      </select>
+                                </mat-form-field>
+                                <h6 class="pt-0 pb-10" *ngIf="tramite.esta=='CHG'">{{tramite.idPc}}</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 text-right" *ngIf="tramite !=null && tramite.esta=='GEN'">
+                                <button type="button" class=" btn btn-primary" (click)="showDialogToAdd()">Agregar Vehículo y Propietario</button>
+                            </div>
+                            <div class="col-12 text-right mt-5 mb-5" *ngIf="tramite !=null && cars.length>0 && tramite.esta=='GEN'">
+                                <button type="button" class=" btn btn-success" [disabled]="!formularioTramite.valid" (click)="finalizarTramite()">Finalizar Trámite</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="text-right" *ngIf="tramite !=null">
-                    <button type="button" class=" btn btn-primary" (click)="showDialogToAdd()">Agregar Vehículo y Propietario</button>
-                </div>
-                <div class="text-right mt-5" *ngIf="tramite !=null">
-                    <button type="button" class=" btn btn-success" (click)="showDialogToAdd()">Finalizar Trámite</button>
-                </div>
+
+
             </div>
             <div class="col-lg-9 col-md-12 col-sm-12" *ngIf="tramite !=null">
                 <p-table #dt [value]="cars" dataKey="matFPV.idPV" styleClass="ui-table-customers" [rowHover]="true" [rows]="5" [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10,25,50]" [loading]="loading" [paginator]="true" [filterDelay]="0" [globalFilterFields]="['matFVH.raDu','matFPV.iden','matFPV.ape','matFPV.nom','matFPV.faDe']">
@@ -49,8 +61,7 @@
                             <th>
                                 A favor de
                             </th>
-                            <th style="width: 5em"></th>
-
+                            <th style="width: 4em"></th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-customer let-expanded="expanded">
@@ -80,17 +91,15 @@
                                 <span class="ui-column-title">A favor de</span> {{customer.matFVH.faDe}}
                             </td>
                             <td>
-                                <button pButton type="button" class="ui-button-primary" icon="pi pi-pencil" (click)="editarPropVeh(customer.matFPV.idPV)"></button>
+                                <button pButton type="button" *ngIf="tramite.esta=='GEN'" class="ui-button-primary" icon="pi pi-pencil" (click)="editarPropVeh(customer.matFPV.idPV)"></button>
                             </td>
-
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="rowexpansion" let-customer>
                         <tr>
                             <td [attr.colspan]="7">
                                 <div class="row">
-
-                                    <div class="col-lg-9 col-md-12 col-sm-12">
+                                    <div class="col-lg-8 col-md-12 col-sm-12">
                                         <div class="widget border border-primary">
                                             <div class="widget-body">
                                                 <h6 class="mb-15"> Información de Propietario</h6>
@@ -106,8 +115,6 @@
                                                                 <h6 class="pt-0 pb-10" *ngIf="customer.matFPV.rzSo!=''"> {{customer.matFPV.rzSo}}</h6>
                                                                 <strong class="mb-0">Dirección Domiciliaria</strong>
                                                                 <h6 class="pt-0 pb-10">{{customer.matFPV.caPr}} y {{customer.matFPV.caSe}}, {{customer.matFPV.nmLt}} </h6>
-                                                                <strong class="mb-0">A favor de</strong>
-                                                                <h6 class="pt-0 pb-10">{{customer.matFVH.faDe}}</h6>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -120,16 +127,46 @@
                                                                 <h6 class="pt-0 pb-10"> {{customer.matFPV.tlCl}}</h6>
                                                                 <strong class="mb-0">Correo Electrónico</strong>
                                                                 <h6 class="pt-0 pb-10">{{customer.matFPV.mail}}</h6>
-                                                                <strong class="mb-0">Observaciones</strong>
-                                                                <h6 class="pt-0 pb-10">{{customer.matFVH.obse}}</h6>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row" *ngIf="tramite.esta=='CHG'">
+                                            <div class="col-lg-4 col-md-4">
+                                                <div class="widget border border-primary social-widget" (click)="generarImpronta(customer.matFVH.idVH)" style="cursor: pointer;">
+                                                    <div class="widget-body p-0">
+                                                        <h2 class="text-facebook mt-2"><i class="fas fa-file-invoice"></i></h2>
+                                                        <div class="content">
+                                                            <div class="text-facebook fw-700 mb-2">Impronta</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4">
+                                                <div class="widget border border-primary social-widget" (click)="generarCheckList(customer.matFVH.idVH,customer.matFVH.tipo)" style="cursor: pointer;">
+                                                    <div class="widget-body p-0">
+                                                        <h2 class="text-facebook mt-2"><i class="fas fa-clipboard-list"></i></h2>
+                                                        <div class="content">
+                                                            <div class="text-facebook fw-700 mb-2">CheckList</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4">
+                                                <div class="widget border border-primary social-widget" (click)="generarCertificadoRuc(customer.matFVH.idVH)" style="cursor: pointer;">
+                                                    <div class="widget-body p-0">
+                                                        <h2 class="text-facebook mt-2"><i class="fas fa-file-alt"></i></h2>
+                                                        <div class="content">
+                                                            <div class="text-facebook fw-700 mb-2">Certificado RUC</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-12 col-sm-12">
+                                    <div class="col-lg-4 col-md-12 col-sm-12">
                                         <div class="widget border border-primary mb-2">
                                             <div class="widget-body">
                                                 <div class="d-flex justify-content-between align-items-center">
@@ -139,33 +176,14 @@
                                                         <h6 class="pt-0 pb-10">{{customer.matFVH.raDu}}</h6>
                                                         <strong class="mb-0">Gravamen</strong>
                                                         <h6 class="pt-0 pb-10">{{customer.matFVH.grav}}</h6>
+                                                        <strong class="mb-0">A favor de</strong>
+                                                        <h6 class="pt-0 pb-10">{{customer.matFVH.faDe}}</h6>
+                                                        <strong class="mb-0">Observaciones</strong>
+                                                        <h6 class="pt-0 pb-10">{{customer.matFVH.obse}}</h6>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="widget border border-primary social-widget">
-                                                    <div class="widget-body p-0">
-                                                        <h2 class="text-facebook mt-2"><i class="fas fa-file-invoice"></i></h2>
-                                                        <div class="content">
-                                                            <div class="text-facebook fw-700 mb-2">Impronta</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="widget border border-primary social-widget">
-                                                    <div class="widget-body p-0">
-                                                        <h2 class="text-facebook mt-2"><i class="fas fa-file-invoice"></i></h2>
-                                                        <div class="content">
-                                                            <div class="text-facebook fw-700 mb-2">CheckList</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                     </div>
                                 </div>
                             </td>
@@ -312,12 +330,12 @@
                                             <mat-form-field class="example-full-width" appearance="fill">
                                                 <mat-label>Tipo Vehículo</mat-label>
                                                 <select matNativeControl formControlName="tipo" required>
-                                                    <option value="1" selected>Particular</option>
-                                                    <option value="2">Público</option>
-                                                    <option value="3">Diplomático</option>
-                                                    <option value="4">Estatal</option>
-                                                    <option value="5">Importado</option>
-                                                    <option value="6">Régimen de internación temporal</option>
+                                                    <option value="2" selected>Particular</option>
+                                                    <option value="3">Público</option>
+                                                    <option value="4">Diplomático</option>
+                                                    <option value="5">Estatal</option>
+                                                    <option value="6">Importado</option>
+                                                    <option value="7">Régimen de internación temporal</option>
                                                   </select>
                                             </mat-form-field>
                                             <section class="example-section">
@@ -353,6 +371,13 @@
                 </div>
             </p-footer>
         </p-dialog>
+        <div class="row mt-10">
+            <div class="col-12 text-center mt-5 mb-5" *ngIf="tramite !=null">
+                <button type="button" *ngIf="tramite.esta=='CHG'" class="btn btn-primary" (click)="generarSobre()">Generar Sobre</button>
+                <button type="button" *ngIf="tramite.esta=='CHG'" class="ml-1 btn btn-primary" (click)="generarListado()">Generar Listado</button>
+                <button class="ml-1 btn btn-secondary" routerLink="/tramites">Regresar</button>
+            </div>
+        </div>
 
     </div>
 </div>

@@ -3,6 +3,8 @@ import { FormGroup, Validators, FormBuilder, FormArray, FormControl } from '@ang
 import { ActivatedRoute } from '@angular/router';
 import { UiServicesService, ServiciosService } from 'src/app/services/service.index';
 import { trigger,state,style,transition,animate } from '@angular/animations';
+import Swal from 'sweetalert2'
+import { Router } from '@angular/router';
 
 declare function validacionIdentificacion(identificacion);
 
@@ -32,11 +34,14 @@ export class NuevoTramiteComponent implements OnInit {
   tramite = null;
   loading;
   formulario: FormGroup;
+  formularioTramite: FormGroup;
+  gestores;
 
   constructor(
     private activeRoute:ActivatedRoute,
     public _uiService: UiServicesService,
     public servicios: ServiciosService,
+    public router: Router,
   ) {  
   }
 
@@ -52,6 +57,7 @@ export class NuevoTramiteComponent implements OnInit {
         if(resp.codRetorno=='0001')
         {
           this.tramite = resp.retorno.matFTR;
+          this.getSucursalesByIdPersona(9);
           this.cars = resp.retorno.lstPropVeh;
           this._uiService.loadingCarga(false);
         }else{
@@ -92,6 +98,13 @@ export class NuevoTramiteComponent implements OnInit {
         usCr:new FormControl('dcorral'),
         esta:new FormControl('ACT'),
       }),
+    })
+
+    this.formularioTramite = new FormGroup({
+        idTR:new FormControl(this.idTramite),
+        idPc:new FormControl('',Validators.required),
+        usCr:new FormControl('dcorral'),
+        esta:new FormControl('CHG'),
     })
   }
 
@@ -190,7 +203,6 @@ delete() {
   this.formulario.value.matFPV.esta = 'INA';
   this.formulario.value.matFVH.esta = 'INA';
   delete this.formulario.value.matFPV.tipoIden;
-  console.log(this.formulario.value);
   this.servicios.deleteVehProp(this.formulario.value).subscribe((resp:any)=>{
     if(resp.codRetorno=='0001')
       {
@@ -224,6 +236,37 @@ changeAFavDe(val){
     this.formulario.controls.matFVH['controls'].faDe.updateValueAndValidity();
     this.formulario.controls.matFVH['controls'].obse.updateValueAndValidity();
   }
+}
+
+finalizarTramite(){
+
+  if(this.formularioTramite.invalid){
+    return;
+  }
+
+  Swal.fire({
+    title: 'Se dara por finalizado el trámite actual',
+    text: "Desea continuar?",
+    type: 'info',
+    showCancelButton: true,
+    confirmButtonText: 'Finalizar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.value) {
+      this._uiService.loadingCarga(true);
+      this.servicios.finalizarTramite(this.formularioTramite.value).subscribe((resp:any)=>{
+        if(resp.codRetorno=='0001'){
+         // this.router.navigate(['/tramites'])
+          this.obtenerTramite(this.idTramite);
+          this._uiService.loadingCarga(false);
+        }else{
+          this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
+        }
+      },error=>{
+        this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
+      });
+    }
+  })
 }
 
 
@@ -290,6 +333,42 @@ getErrorMessageCorreo() {
   }
 
   return this.formulario.controls.matFPV['controls'].mail.hasError('email') ? 'No es un correo válido' : '';
+}
+
+getSucursalesByIdPersona(idSucursal){
+  this.servicios.getPersonasByIdSucursal(idSucursal).subscribe((resp:any)=>{
+    if(resp.codRetorno=='0001')
+      {
+        this.gestores = resp.retorno;
+        this.displayDialog = false;
+        this._uiService.loadingCarga(false);
+      }
+    else{
+      this._uiService.alertErrorMessage('No se pudieron ingresar los datos, intente nuevamente')
+    }  
+  }, error => {
+    this._uiService.alertErrorMessage('No se pudieron ingresar los datos, intente nuevamente')
+  })
+}
+
+generarSobre(){
+  this.servicios.getReporte(this.idTramite,9,0);
+}
+
+generarListado(){
+  this.servicios.getReporte(this.idTramite,8,0);
+}
+
+generarImpronta(id){
+  this.servicios.getReporte(id,1,0);
+}
+
+generarCheckList(id,tipo){
+  this.servicios.getReporte(id,tipo,0);
+}
+
+generarCertificadoRuc(id){
+  this.servicios.getReporte(id,0,0);
 }
 
 }
