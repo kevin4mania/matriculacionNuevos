@@ -58,7 +58,7 @@ export class PerfilComponent implements OnInit {
       this.userForm.get('direccion').setValue(this.persona.cabeceraPersona.direccionDomicilio)
     })
 
-    this.nombre = this._usuarioService.persona['nombrePersona']+' '+this._usuarioService.persona['apellidoPersona'];
+    this.nombre = this._usuarioService.usuario;
     this.usuario = this._usuarioService.usuario;
 
   }

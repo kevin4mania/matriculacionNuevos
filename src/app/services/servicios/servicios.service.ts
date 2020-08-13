@@ -19,8 +19,20 @@ export class ServiciosService {
     return this.http.post(environment.URL_SERVICIOS+'/tramite/insert',form);
   }
 
-  getTramites(idPc,nmTr,codEst,orderBy,numPage,regxPage){
-    return this.http.get(environment.URL_SERVICIOS+'/tramite/findAllByCriterio/' + idPc + '/' + nmTr+ '/' + codEst + '/' + orderBy + '/' + numPage + '/' + regxPage);
+  finalizarTramite(form){
+    return this.http.post(environment.URL_SERVICIOS+'/tramite/update',form);
+  }
+
+  deleteTramite(idTr,user){
+    return this.http.get(environment.URL_SERVICIOS+'/tramite/updateEstadoById/' +idTr+'/INA/'+user);
+  }
+
+  recuperarTramite(idTr,user){
+    return this.http.get(environment.URL_SERVICIOS+'/tramite/updateEstadoById/' +idTr+'/GEN/'+user);
+  }
+
+  getTramites(idPc,nmTr,codEst,usCr,orderBy,numPage,regxPage){
+    return this.http.get(environment.URL_SERVICIOS+'/tramite/findAllByCriterio/' + idPc + '/' + nmTr+ '/' + codEst + '/'+usCr+'/'+ orderBy + '/' + numPage + '/' + regxPage);
   }
 
   getTramiteById(idTr){
@@ -47,9 +59,6 @@ export class ServiciosService {
     return this.http.get(environment.URL_SERVICIOS+'/propietario/findProVehById/' +idPV);
   }
 
-  finalizarTramite(form){
-    return this.http.post(environment.URL_SERVICIOS+'/tramite/update',form);
-  }
 
   getPersonasByIdSucursal(idSucursal){
     return this.http.get(environment.URL_SERVICIOS+'/persona/findAllByCriterio/'+idSucursal+'/*/*/*/*/1/20');
