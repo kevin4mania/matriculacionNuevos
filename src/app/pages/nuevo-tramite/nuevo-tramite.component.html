@@ -19,6 +19,9 @@
                 <div class="text-right" *ngIf="tramite !=null">
                     <button type="button" class=" btn btn-primary" (click)="showDialogToAdd()">Agregar Vehículo y Propietario</button>
                 </div>
+                <div class="text-right mt-5" *ngIf="tramite !=null">
+                    <button type="button" class=" btn btn-success" (click)="showDialogToAdd()">Finalizar Trámite</button>
+                </div>
             </div>
             <div class="col-lg-9 col-md-12 col-sm-12" *ngIf="tramite !=null">
                 <p-table #dt [value]="cars" dataKey="matFPV.idPV" styleClass="ui-table-customers" [rowHover]="true" [rows]="5" [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10,25,50]" [loading]="loading" [paginator]="true" [filterDelay]="0" [globalFilterFields]="['matFVH.raDu','matFPV.iden','matFPV.ape','matFPV.nom','matFPV.faDe']">
@@ -234,13 +237,6 @@
                                                 <input maxlength="125" formControlName="ape" matInput>
                                             </mat-form-field>
                                         </div>
-                                        <div class="col-md-12 col-lg-12 col-xl-12" formGroupName="matFVH">
-                                            <mat-form-field class="example-full-width">
-                                                <mat-label>A favor de</mat-label>
-                                                <input maxlength="125" formControlName="faDe" matInput>
-                                            </mat-form-field>
-                                        </div>
-
                                     </div>
                                 </mat-card-content>
                             </mat-card>
@@ -308,19 +304,11 @@
                                             </mat-card-title>
                                         </mat-card-header>
                                         <mat-card-content>
-
                                             <mat-form-field class="example-full-width">
                                                 <mat-label>RAMV/DUI</mat-label>
                                                 <input formControlName="raDu" matInput maxlength="15" required>
                                                 <!-- <mat-error *ngIf="thirdFormGroup.controls.formularioMatricula.invalid">{{getErrorMessageformularioMatricula()}}</mat-error>-->
                                             </mat-form-field>
-                                            <section class="example-section">
-                                                <label class="example-margin">Gravamen:</label>
-                                                <mat-radio-group formControlName="grav">
-                                                    <mat-radio-button color="primary" class="example-margin" value="Si">Si</mat-radio-button>
-                                                    <mat-radio-button color="primary" class="example-margin" value="No">No</mat-radio-button>
-                                                </mat-radio-group>
-                                            </section>
                                             <mat-form-field class="example-full-width" appearance="fill">
                                                 <mat-label>Tipo Vehículo</mat-label>
                                                 <select matNativeControl formControlName="tipo" required>
@@ -331,6 +319,17 @@
                                                     <option value="5">Importado</option>
                                                     <option value="6">Régimen de internación temporal</option>
                                                   </select>
+                                            </mat-form-field>
+                                            <section class="example-section">
+                                                <label class="example-margin">Gravamen:</label>
+                                                <mat-radio-group formControlName="grav">
+                                                    <mat-radio-button color="primary" (change)="changeAFavDe($event.value)" class="example-margin" value="Si">Si</mat-radio-button>
+                                                    <mat-radio-button color="primary" (change)="changeAFavDe($event.value)" class="example-margin" value="No">No</mat-radio-button>
+                                                </mat-radio-group>
+                                            </section>
+                                            <mat-form-field class="example-full-width">
+                                                <mat-label>A favor de</mat-label>
+                                                <input maxlength="125" formControlName="faDe" matInput>
                                             </mat-form-field>
                                             <mat-form-field class="example-full-width">
                                                 <mat-label class="example-full-width">Observaciones</mat-label>
@@ -350,6 +349,7 @@
                 <div class="ui-dialog-buttonpane ui-helper-clearfix ">
                     <button type="button" [disabled]="formulario.invalid" pButton icon="fa fa-check " *ngIf="newCar" (click)="save()" label="Guardar"></button>
                     <button type="button" [disabled]="formulario.invalid" pButton icon="fa fa-check " *ngIf="!newCar" (click)="edit()" label="Actualizar"></button>
+                    <button type="button" [disabled]="formulario.invalid" pButton icon="fa fa-trash " class="ui-button-danger" *ngIf="!newCar" (click)="delete()" label="Eliminar"></button>
                 </div>
             </p-footer>
         </p-dialog>
