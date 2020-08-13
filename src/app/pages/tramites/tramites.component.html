@@ -19,9 +19,9 @@
                 <ng-container matColumnDef="esta">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
                     <td mat-cell *matCellDef="let element">
-                        <span *ngIf="element.esta=='GEN'" class="badge badge-red text-light"> {{element.esta}}</span>
-                        <span *ngIf="element.esta=='En Proceso'" class="badge badge-blue text-light"> {{element.esta}}</span>
-                        <span *ngIf="element.esta=='Finalizado'" class="badge badge-success"> {{element.esta}}</span>
+                        <span *ngIf="element.esta=='GEN'" class="badge badge-red text-light"> Ingresado</span>
+                        <!--<span *ngIf="element.esta=='CHG'" class="badge badge-blue text-light"> {{element.esta}}</span>-->
+                        <span *ngIf="element.esta=='CHG'" class="badge badge-success"> Finalizado</span>
                     </td>
                 </ng-container>
 
@@ -29,12 +29,15 @@
                     <th mat-header-cell *matHeaderCellDef> </th>
                     <td mat-cell *matCellDef="let element" class="text-center">
                         <button matTooltip="Ver Detalle" mat-icon-button color="primary" (click)="redirectToDetails(element.idTR)">
-                          <mat-icon class="mat-18">description</mat-icon>
+                          <mat-icon class="mat-18">remove_red_eye</mat-icon>
                       </button>
-                        <button *ngIf="element.name=='Finalizado'" matTooltip="Generar Sobre" mat-icon-button style="color: #19b5fe;" (click)="redirectToSobre(element.idTR)">
+                        <button *ngIf="element.esta=='CHG'" matTooltip="Generar Sobre" mat-icon-button color="primary" (click)="redirectToSobre(element.idTR)">
                         <mat-icon class="mat-18">local_post_office</mat-icon>
                     </button>
-                        <button *ngIf="element.name!='Finalizado'" matTooltip="Eliminar Trámite" mat-icon-button color="warn" (click)="redirectToDelete(element.idTR)">
+                        <button *ngIf="element.esta=='CHG'" matTooltip="Generar Listado" mat-icon-button color="primary" (click)="redirectToListado(element.idTR)">
+                        <mat-icon class="mat-18">assignment</mat-icon>
+                    </button>
+                        <button *ngIf="element.esta!='CHG'" matTooltip="Eliminar Trámite" mat-icon-button color="primary" (click)="redirectToDelete(element.idTR)">
                         <mat-icon class="mat-18">delete</mat-icon>
                     </button>
                     </td>

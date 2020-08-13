@@ -102,11 +102,15 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
   }
 
   redirectToSobre = (id: string) => {
-    
+    this.servicios.getReporte(id,9,0);
+  }
+
+  redirectToListado = (id: string) => {
+    this.servicios.getReporte(id,8,0);
   }
 
   redirectToDetails = (id: string) => {
-    
+    this.router.navigate(['/tramite/'+id])
   }
 
   redirectToNewTramite = () => {
