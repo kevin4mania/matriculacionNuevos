@@ -6,7 +6,7 @@ import {MatPaginatorIntl} from '@angular/material';
 import Swal from 'sweetalert2'
 import { Router } from '@angular/router';
 import {MatSnackBar, MatSnackBarVerticalPosition, MatSnackBarHorizontalPosition} from '@angular/material/snack-bar';
-import { UiServicesService, ServiciosService } from 'src/app/services/service.index';
+import { UiServicesService, ServiciosService,UsuarioService } from 'src/app/services/service.index';
 
 
 @Component({
@@ -36,7 +36,7 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
     return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
   };
 
-  displayedColumns: string[] = ['nmTr', 'esta','details'];
+  displayedColumns: string[] = ['nmTr','nmVh','esta','details'];
   dataSource = new MatTableDataSource<PeriodicElement>([]);
   horizontalPosition: MatSnackBarHorizontalPosition = 'end';
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';
@@ -48,16 +48,20 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
   numTramites;
   loading = false;
 
+  userInfo;
+
   constructor(
     public router: Router,
     private _snackBar: MatSnackBar,
     public _uiService: UiServicesService,
     public servicios: ServiciosService,
+    public usuario:UsuarioService,
   ) { 
     super();
   }
 
   ngOnInit() {
+    this.userInfo = this.usuario.asistente;
     this.obtenerTramites();
   }
 
@@ -71,7 +75,7 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
 
   obtenerTramites(){
     this._uiService.loadingCarga(true);
-    this.servicios.getTramites('*', '*', '*', '*', 1, 9999).subscribe((resp: any) => {
+    this.servicios.getTramites('*', '*', 'GEN',this.userInfo['logi'],'*', 1, 9999).subscribe((resp: any) => {
       if (resp.codRetorno == '0001') {
         this.tramites = resp.retorno;
         this.numTramites = resp.countRegistros;
@@ -88,17 +92,39 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
   }
 
   redirectToDelete = (id: string) => {
-    let snackBarRef = this._snackBar.open('Trámite eliminado', 'Deshacer', {
-      duration: 5000,
-      horizontalPosition: this.horizontalPosition,
-      verticalPosition: this.verticalPosition,
-      panelClass:['customClass']
-    });
-
-    snackBarRef.onAction().subscribe(() => {
-      console.log('The snack-bar action was triggered!');
-    });
+    this.servicios.deleteTramite(id,this.userInfo['logi']).subscribe((resp:any)=>{
+      if(resp.codRetorno=='0001'){
+        let snackBarRef = this._snackBar.open('Trámite eliminado', 'Deshacer', {
+          duration: 5000,
+          horizontalPosition: this.horizontalPosition,
+          verticalPosition: this.verticalPosition,
+          panelClass:['customClass']
+        });
+        this.obtenerTramites();
     
+        snackBarRef.onAction().subscribe(() => {
+          this.recuperarTramite(id);
+        });
+        this._uiService.loadingCarga(false);
+      }else{
+        this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
+      }
+    },error=>{
+      this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
+    });
+  }
+
+  recuperarTramite(id){
+    this.servicios.recuperarTramite(id,this.userInfo['logi']).subscribe((resp:any)=>{
+      if(resp.codRetorno=='0001'){
+        this.obtenerTramites();
+        this._uiService.loadingCarga(false);
+      }else{
+        this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
+      }
+    },error=>{
+      this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
+    });
   }
 
   redirectToSobre = (id: string) => {
@@ -126,9 +152,9 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
         this._uiService.loadingCarga(true);
         let formTramite = {
           'idTR':'0',
-          'idPc':'1',
+          'idPc':this.userInfo['idPc'],
           'nmTr':'',
-          'usCr':'DCORRAL',
+          'usCr':this.userInfo['logi'],
           'esta':'GEN',
         }
         this.servicios.createTramite(formTramite).subscribe((resp:any)=>{
