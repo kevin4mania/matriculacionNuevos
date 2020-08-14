@@ -44,7 +44,7 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
-  tramites: any[];
+  tramites = [];
   numTramites;
   loading = false;
 
@@ -157,7 +157,7 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
         let formTramite = {
           'idTR':'0',
           'idPc':this.userInfo['idPc'],
-          'nmTr':'',
+          'nmTr':codigoTramite,
           'usCr':this.usuario.usuario,
           'esta':'GEN',
         }
