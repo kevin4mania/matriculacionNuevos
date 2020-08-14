@@ -123,21 +123,12 @@ export class UsuarioService {
     return this.http.post(environment.URL_SERVICIOS_SEGURIDAD+'/updatePassForgot',form)
   }
 
-  getPersona(){
-    return this.http.get(environment.URL_SERVICIOS_SEGURIDAD+'/perfil/'+this.usuario+'/'+environment.idAplicacion)
+  getPersona(idPersona){
+    return this.http.get(environment.URL_SERVICIOS+'/persona/findById/'+idPersona)
   }
 
-  updateUser(formUser,persona){
-    let form = {
-      'secuenciaCabeceraPersona': persona.cabeceraPersona.secuenciaCabeceraPersona,
-      'telefonoCelular':formUser.contacto,
-      'direccionDomicilio': formUser.direccion,
-      'detalleCabeceraPersona':{
-        'secuenciaDetallePersona': persona.cabeceraPersona.detalleCabeceraPersona.secuenciaDetallePersona,
-        'mailPersonal':formUser.correo
-      }
-    }
-    return this.http.post(environment.URL_SERVICIOS_SEGURIDAD+'/updateCabeceraPersona',form)
+  updateUser(formUser){
+    return this.http.post(environment.URL_SERVICIOS + '/persona/update',formUser)
   }
 
   recuperarPass(user){

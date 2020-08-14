@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup,  Validators, FormControl } from '@angular/forms';
-import { UsuarioService } from '../../services/service.index';
+import { UsuarioService, UiServicesService } from '../../services/service.index';
 
 import Swal from 'sweetalert2'
 
@@ -15,10 +15,10 @@ export class PerfilComponent implements OnInit {
 
   persona:any=null;
 
-  nombre;
-  usuario;
-
-  constructor(public _usuarioService: UsuarioService) { }
+  constructor(
+    public _usuarioService: UsuarioService,
+    public _uiService: UiServicesService
+    ) { }
 
 
   sonIguales(campo1:string, campo2: string){
@@ -40,9 +40,16 @@ export class PerfilComponent implements OnInit {
 
   ngOnInit() {
     this.userForm = new FormGroup({
-      correo: new FormControl('', [Validators.required, Validators.email]),
-      contacto: new FormControl(''),
-      direccion: new FormControl('')
+      idPC: new FormControl(''),
+      idSc: new FormControl(''),
+      iden: new FormControl(''),
+      nom: new FormControl(''),
+      ape: new FormControl(''),
+      feCd: new FormControl(''),
+      mail: new FormControl('', [Validators.required, Validators.email]),
+      tlCv: new FormControl(''),
+      dire: new FormControl(''),
+      foto: new FormControl(''),
     });
 
     this.passwordForm = new FormGroup({
@@ -51,19 +58,34 @@ export class PerfilComponent implements OnInit {
       passwordConfirm: new FormControl('', Validators.required)
     },{validators: this.sonIguales('passwordNew','passwordConfirm')});
 
-    this._usuarioService.getPersona().subscribe((resp:any)=>{
-      this.persona = resp.retorno;
-      this.userForm.get('correo').setValue(this.persona.cabeceraPersona.detalleCabeceraPersona.mailPersonal)
-      this.userForm.get('contacto').setValue(this.persona.cabeceraPersona.telefonoCelular)
-      this.userForm.get('direccion').setValue(this.persona.cabeceraPersona.direccionDomicilio)
+    this._uiService.loadingCarga(true);
+    this._usuarioService.getPersona(this._usuarioService.persona['idPC']).subscribe((resp:any)=>{
+      if(resp.codRetorno == '0001'){
+        this._uiService.loadingCarga(false);
+        this.persona = resp.retorno;
+        this.userForm.get('idPC').setValue(this.persona.idPC)
+        this.userForm.get('idSc').setValue(this.persona.idSc)
+        this.userForm.get('iden').setValue(this.persona.iden)
+        this.userForm.get('nom').setValue(this.persona.nom)
+        this.userForm.get('ape').setValue(this.persona.ape)
+        this.userForm.get('feCd').setValue(this.persona.feCd)
+        this.userForm.get('mail').setValue(this.persona.mail)
+        this.userForm.get('tlCv').setValue(this.persona.tlCv)
+        this.userForm.get('dire').setValue(this.persona.dire)
+        this.userForm.get('foto').setValue(this.persona.foto)
+      }else{
+        this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
+      }
+    },error=>{
+      this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
     })
-
-    this.nombre = this._usuarioService.usuario;
-    this.usuario = this._usuarioService.usuario;
-
   }
 
   updateUser(){
+
+    if(this.userForm.invalid){
+      return;
+    }
 
    Swal.fire({
     title: 'Importante!',
@@ -74,33 +96,17 @@ export class PerfilComponent implements OnInit {
     cancelButtonText: 'Cancelar'
   }).then((result) => {
     if (result.value) {
-      this._usuarioService.updateUser(this.userForm.value,this.persona).subscribe((resp:any)=>{
+      this._uiService.loadingCarga(true);
+      this._usuarioService.updateUser(this.userForm.value).subscribe((resp:any)=>{
         if(resp.codRetorno == '0001'){
-          Swal.fire(
-            'Actualizado!',
-            'Sus Datos fueron actualizados correctamente',
-            'success'
-          )
+          this._uiService.loadingCarga(false);
+          this._uiService.alertConfirmMessage("Datos actualizados correctamente")
         }else{
-          Swal.fire(
-            'Error!',
-            'Ocurrio un error vuelva a intentarlo',
-            'error'
-          )
+          this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
         }
       },error=>{
-        Swal.fire(
-          'Error!',
-          'Ocurrio un error vuelva a intentarlo',
-          'error'
-        )
+        this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
       })
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-      Swal.fire(
-        'Acción Cancelada',
-        '',
-        'error'
-      )
     }
   });
   }
