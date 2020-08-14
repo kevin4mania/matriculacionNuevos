@@ -34,6 +34,7 @@ export class NuevoTramiteComponent implements OnInit {
   newCar: boolean;
   idTramite;
   tramite = null;
+  gestor;
   loading;
   formulario: FormGroup;
   formularioTramite: FormGroup;
@@ -64,6 +65,7 @@ export class NuevoTramiteComponent implements OnInit {
         {
           console.log(resp.retorno);
           this.tramite = resp.retorno.matFTR;
+          this.gestor=resp.retorno.gestor;
           this.getSucursalesByIdPersona(this.usuario.sucursal.idSC);
           this.cars = resp.retorno.lstPropVeh;
           this._uiService.loadingCarga(false);

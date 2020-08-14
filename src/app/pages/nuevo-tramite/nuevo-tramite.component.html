@@ -9,7 +9,7 @@
                                 <strong class="mb-0"> Número de Trámite</strong>
                                 <h6 class="pt-0 pb-10">{{tramite.nmTr}}</h6>
                                 <strong class="mb-0"> Usuario Creador</strong>
-                                <h6 class="pt-0 pb-10">{{tramite.usCr}} {{tramite.idPc}}</h6>
+                                <h6 class="pt-0 pb-10">{{tramite.usCr}}</h6>
                                 <strong class="mb-0">Fecha de Elaboración</strong>
                                 <h6 class="pt-0 pb-10">{{tramite.feCr | date:"MM/dd/yyyy"}}</h6>
                                 <strong *ngIf="cars.length>0" class="mb-0">Gestor Autorizado</strong>
@@ -19,7 +19,7 @@
                                         <option *ngFor="let gestor of gestores" value="{{gestor.idPC}}" >{{gestor.nom}} {{gestor.ape}}</option>
                                       </select>
                                 </mat-form-field>
-                                <h6 class="pt-0 pb-10" *ngIf="tramite.esta=='CHG'">{{tramite.idPc}}</h6>
+                                <h6 class="pt-0 pb-10" *ngIf="tramite.esta=='CHG'">{{gestor.nom}} {{gestor.ape}}</h6>
                             </div>
                         </div>
                         <div class="row">
