@@ -53,10 +53,12 @@ export class PerfilComponent implements OnInit {
     });
 
     this.passwordForm = new FormGroup({
-      passwordOld: new FormControl('', Validators.required ),
-      passwordNew: new FormControl('', Validators.required ),
-      passwordConfirm: new FormControl('', Validators.required)
-    },{validators: this.sonIguales('passwordNew','passwordConfirm')});
+      idUC: new FormControl(this._usuarioService.asistente['idUC']),
+      login: new FormControl(this._usuarioService.usuario),
+      oldPwd: new FormControl('', Validators.required ),
+      newPwd: new FormControl('', Validators.required ),
+      passwordConfirm: new FormControl('', Validators.required),
+    },{validators: this.sonIguales('newPwd','passwordConfirm')});
 
     this._uiService.loadingCarga(true);
     this._usuarioService.getPersona(this._usuarioService.persona['idPC']).subscribe((resp:any)=>{
@@ -115,6 +117,7 @@ export class PerfilComponent implements OnInit {
     if(this.passwordForm.invalid){
       return;
     }
+    
 
     Swal.fire({
       title: 'Importante!',
@@ -125,35 +128,20 @@ export class PerfilComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.value) {
+        delete this.passwordForm.value.passwordConfirm;
+        this._uiService.loadingCarga(true);
         this._usuarioService.cambiarPassword(this.passwordForm.value).subscribe((resp:any)=>{
           if(resp.codRetorno=='0001'){
             this.passwordForm.reset();
-            Swal.fire(
-              'Actualizado!',
-              'Sus Datos fueron actualizados correctamente',
-              'success'
-            )
+            this._uiService.loadingCarga(false);
+            this._uiService.alertConfirmMessage("Datos actualizados correctamente")
           }else{
-            Swal.fire(
-              'Error!',
-              resp.retorno,
-              'error'
-            )
+            this._uiService.alertErrorMessage(resp.retorno)
           }
         },error=>{
-          Swal.fire(
-            'Error!',
-            'Ocurrio un error vuelva a intentarlo',
-            'error'
-          )
+          this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");
         })
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire(
-          'Acción Cancelada',
-          '',
-          'error'
-        )
-      }
+      } 
     });
    }
 
