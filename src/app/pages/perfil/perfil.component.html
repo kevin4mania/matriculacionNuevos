@@ -9,22 +9,22 @@
             <div class="card-body">
                 <form [formGroup]="userForm" (ngSubmit)="updateUser()" novalidate>
                     <div class="form-group">
-                        <label for="correo">Correo Electrónico</label>
-                        <input maxlength="50" type="text" formControlName="correo" placeholder="Ingresar Correo Electrónico" class="form-control" name="correo" required>
+                        <label for="mail">Correo Electrónico</label>
+                        <input maxlength="50" type="text" formControlName="mail" placeholder="Ingresar Correo Electrónico" class="form-control" name="mail" required>
                     </div>
-                    <div *ngIf="userForm.controls['correo'].errors && (userForm.controls['correo'].dirty || userForm.controls['correo'].touched)" class="alert alert-danger">
-                        <div *ngIf="userForm.controls['correo'].invalid">
-                            <div *ngIf="userForm.controls['correo'].errors.required">Correo Electrónico campo requerido</div>
-                            <div *ngIf="userForm.controls['correo'].errors.email">Ingrese un correo válido</div>
+                    <div *ngIf="userForm.controls['mail'].errors && (userForm.controls['mail'].dirty || userForm.controls['mail'].touched)" class="alert alert-danger">
+                        <div *ngIf="userForm.controls['mail'].invalid">
+                            <div *ngIf="userForm.controls['mail'].errors.required">Correo Electrónico campo requerido</div>
+                            <div *ngIf="userForm.controls['mail'].errors.email">Ingrese un correo válido</div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="contacto">Contacto Telefónico</label>
-                        <input type="text" formControlName="contacto" placeholder="Ingresar número celular/convencional" class="form-control" name="contacto">
+                        <input type="text" formControlName="tlCv" placeholder="Ingresar número celular/convencional" class="form-control" name="tlCv">
                     </div>
                     <div class="form-group">
                         <label for="direccion">Dirección Domiciliaria</label>
-                        <textarea name="direccion" formControlName="direccion" rows="2" class="form-control"></textarea>
+                        <textarea name="dire" formControlName="dire" rows="2" class="form-control"></textarea>
                     </div>
                     <div class="text-right">
                         <button type="submit" [disabled]="userForm.pristine || userForm.invalid" class="btn btn-info">Actualizar Datos</button>
