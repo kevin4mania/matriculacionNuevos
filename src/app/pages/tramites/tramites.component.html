@@ -1,7 +1,20 @@
 <div class="row">
     <div class="col-lg-7 col-md-6 col-sm-12 mb-15">
-
-        <div class="mat-elevation-z8">
+        <div class="card task-board mb-0">
+            <div class="card-body text-center" *ngIf="tramites.length ==0">
+                <div style=" display: table; height: 50vh; width: 100%; ">
+                    <div style=" display: table-cell; vertical-align: middle; ">
+                        <img src="assets/img/documento.png " class="mt-25 mb-25 " width="100px ">
+                        <h5 class="text-secondary fw-700 mt-25 ">¡No dispones de Trámites!</h5>
+                        <h6 class="text-secondary ">Crea un trámite para poder asignar vehículos y propietarios</h6>
+                        <button type="button " class="btn btn-primary " data-toggle="modal " data-target="#crearActividadModal " (click)="redirectToNewTramite()">
+                        Crear Trámite
+                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mat-elevation-z8" *ngIf="tramites.length !=0">
             <div class="text-right" style="background-color: #fff;">
                 <mat-form-field fxFlex="40%" class="mt-10 mr-3">
                     <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Buscar">
