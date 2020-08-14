@@ -139,7 +139,7 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
     var b64 = CryptoJS.AES.encrypt(id.toString(), this.tokenFromUI).toString();
     var e64 = CryptoJS.enc.Base64.parse(b64);
     var encriptado = e64.toString(CryptoJS.enc.Hex);
-    this.router.navigate(['/tramite/'+encriptado])
+    this.router.navigate(['/tramites/tramite/'+encriptado])
   }
 
   redirectToNewTramite = () => {
@@ -166,7 +166,7 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
             var b64 = CryptoJS.AES.encrypt(resp.retorno.toString(), this.tokenFromUI).toString();
             var e64 = CryptoJS.enc.Base64.parse(b64);
             var encriptado = e64.toString(CryptoJS.enc.Hex);
-            this.router.navigate(['/tramite/'+encriptado])
+            this.router.navigate(['/tramites/tramite/'+encriptado])
             this._uiService.loadingCarga(false);
           }else{
             this._uiService.alertErrorMessage("Ocurrio un error, intente nuevamente");

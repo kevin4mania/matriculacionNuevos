@@ -16,7 +16,7 @@ const pagesRoutes: Routes = [
             { path: 'inicio', component: DashboardComponent, data:{ titulo: 'Dashboard', descripcion:'Control de Asistencia y Actividades', icon:'ik ik-align-justify'} },
             { path: 'perfil', component: PerfilComponent,  data:{ titulo: 'Mi Perfil', descripcion:'Personaliza tus datos', icon:'ik ik-user'}  },
             { path: 'tramites', component: TramitesComponent, data:{ titulo: 'Trámites', descripcion:'Gestor de Trámites', icon:'ik ik-file'}  },
-            { path: 'tramite/:id', component: NuevoTramiteComponent, data:{ titulo: 'Nuevo Trámite', descripcion:'Personaliza tus datos', icon:'ik ik-user'}  },
+            { path: 'tramites/tramite/:id', component: NuevoTramiteComponent, data:{ titulo: 'Nuevo Trámite', descripcion:'Generación de Trámites', icon:'ik ik-user'}  },
             { path: '', redirectTo: '/tramites', pathMatch: 'full' }
         ]
     }
