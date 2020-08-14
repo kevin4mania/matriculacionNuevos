@@ -75,7 +75,7 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
 
   obtenerTramites(){
     this._uiService.loadingCarga(true);
-    this.servicios.getTramites('*', '*', '*',this.usuario.usuario,'*', 1, 9999).subscribe((resp: any) => {
+    this.servicios.getTramitesNEQ('*', '*', 'INA',this.usuario.usuario,'*', 1, 9999).subscribe((resp: any) => {
       if (resp.codRetorno == '0001') {
         this.tramites = resp.retorno;
         this.numTramites = resp.countRegistros;
@@ -153,6 +153,7 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
     }).then((result) => {
       if (result.value) {
         this._uiService.loadingCarga(true);
+        let codigoTramite ='AMT-MATVN-'+this.usuario.usuario+'-'+(this.tramites.length+1);
         let formTramite = {
           'idTR':'0',
           'idPc':this.userInfo['idPc'],

@@ -35,6 +35,10 @@ export class ServiciosService {
     return this.http.get(environment.URL_SERVICIOS+'/tramite/findAllByCriterio/' + idPc + '/' + nmTr+ '/' + codEst + '/'+usCr+'/'+ orderBy + '/' + numPage + '/' + regxPage);
   }
 
+  getTramitesNEQ(idPc,nmTr,codEst,usCr,orderBy,numPage,regxPage){
+    return this.http.get(environment.URL_SERVICIOS+'/tramite/findAllByCriterio_NEQ/' + idPc + '/' + nmTr+ '/' + codEst + '/'+usCr+'/'+ orderBy + '/' + numPage + '/' + regxPage);
+  }
+
   getTramiteById(idTr){
     return this.http.get(environment.URL_SERVICIOS+'/tramite/findById/' +idTr);
   }
