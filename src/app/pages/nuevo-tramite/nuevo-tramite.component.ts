@@ -6,6 +6,7 @@ import { trigger,state,style,transition,animate } from '@angular/animations';
 import Swal from 'sweetalert2'
 import { Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
+import { Observable } from 'rxjs';
 
 declare function validacionIdentificacion(identificacion);
 
@@ -115,6 +116,10 @@ export class NuevoTramiteComponent implements OnInit {
         usCr:new FormControl(this.usuario.usuario),
         esta:new FormControl('CHG'),
     })
+
+    this.formulario.controls.matFVH['controls'].raDu.setAsyncValidators([
+       this.existeRaDu.bind(this),
+    ]);
   }
 
   validacionCedula(control: FormControl) {
@@ -323,6 +328,18 @@ editarPropVeh(idPro){
   }, error => {
     this._uiService.alertErrorMessage('No se pudieron recuperar los datos, intente nuevamente')
   });
+}
+
+existeRaDu(control: FormControl): Promise<any>|Observable<any> {
+  const promesa = new Promise(
+    (resolve, reject) => {
+      return this.servicios.getVehiculoByCriterio('*','*',control.value,'ACT','*','1','999999').subscribe((res:any) => {
+        console.log(res);
+        resolve(res.codRetorno==='0001'?  { existeradu: true } : null);
+      });
+    }
+  );
+  return promesa;
 }
 
 getErrorMessageCedula() {

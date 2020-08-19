@@ -47,6 +47,10 @@ export class ServiciosService {
     return this.http.get(environment.URL_SERVICIOS+'/vehiculo/findAllPropVehByTramite/' +idTr);
   }
 
+  getVehiculoByCriterio(idTr,idPv,raDu,codEst,orderBy,numPage,regxPage){
+    return this.http.get(environment.URL_SERVICIOS+'/vehiculo/findAllByCriterio/'+idTr+'/'+idPv+'/'+raDu+'/'+codEst+'/'+orderBy+'/'+numPage+'/'+regxPage);
+  }
+
   createVehProp(form){
     return this.http.post(environment.URL_SERVICIOS+'/propietario/insertProVeh',form);
   }
@@ -65,7 +69,7 @@ export class ServiciosService {
 
 
   getPersonasByIdSucursal(idSucursal){
-    return this.http.get(environment.URL_SERVICIOS+'/persona/findAllByCriterio/'+idSucursal+'/*/*/*/*/1/20');
+    return this.http.get(environment.URL_SERVICIOS+'/persona/findAllByIdScAndFeCd/'+idSucursal+'/ACT');
   }
 
   getReporte(id,tipo,aux){
