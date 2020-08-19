@@ -3,6 +3,7 @@ import { FormGroup,  Validators, FormControl } from '@angular/forms';
 import { UsuarioService, UiServicesService } from '../../services/service.index';
 
 import Swal from 'sweetalert2'
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-perfil',
@@ -12,7 +13,8 @@ import Swal from 'sweetalert2'
 export class PerfilComponent implements OnInit {
   userForm: FormGroup;
   passwordForm: FormGroup;
-
+  imagenSubir: File;
+  imagenTemp;
   persona:any=null;
 
   constructor(
@@ -60,6 +62,10 @@ export class PerfilComponent implements OnInit {
       passwordConfirm: new FormControl('', Validators.required),
     },{validators: this.sonIguales('newPwd','passwordConfirm')});
 
+    this.obtenerPersona();
+  }
+
+  obtenerPersona(){
     this._uiService.loadingCarga(true);
     this._usuarioService.getPersona(this._usuarioService.persona['idPC']).subscribe((resp:any)=>{
       if(resp.codRetorno == '0001'){
@@ -86,9 +92,10 @@ export class PerfilComponent implements OnInit {
   updateUser(){
 
     if(this.userForm.invalid){
+      
       return;
     }
-
+    console.log("aqui");
    Swal.fire({
     title: 'Importante!',
     text: 'Esta seguro de actualizar sus datos?',
@@ -101,6 +108,7 @@ export class PerfilComponent implements OnInit {
       this._uiService.loadingCarga(true);
       this._usuarioService.updateUser(this.userForm.value).subscribe((resp:any)=>{
         if(resp.codRetorno == '0001'){
+          this.obtenerPersona();
           this._uiService.loadingCarga(false);
           this._uiService.alertConfirmMessage("Datos actualizados correctamente")
         }else{
@@ -117,8 +125,7 @@ export class PerfilComponent implements OnInit {
     if(this.passwordForm.invalid){
       return;
     }
-    
-
+  
     Swal.fire({
       title: 'Importante!',
       text: 'Esta seguro de actualizar su contraseña?',
@@ -145,4 +152,48 @@ export class PerfilComponent implements OnInit {
     });
    }
 
+   async seleccionImage(archivo: File){
+    if(!archivo){
+      this.imagenSubir = null;
+      return;
+    }
+
+    if ( archivo.type.indexOf('image') < 0 ) {
+      this._uiService.alertErrorMessage('El formato de imagen no es correcto');
+      this.imagenSubir = null;
+      return;
+    }
+
+    if(archivo.size > 357336 ){
+      this._uiService.alertErrorMessage('La imagen no puede superar los 350kb');
+      this.imagenSubir = null;
+      return;
+    }
+
+    this._uiService.loadingCarga(true);
+    this.imagenSubir = archivo;
+    const reader = new FileReader();
+
+    const urlImagenTemp = reader.readAsDataURL( archivo );
+    reader.onloadend = () => this.imagenTemp = reader.result;
+
+    
+    this._usuarioService.subirImagenFTPPerfil(this.imagenSubir,this.persona.iden).subscribe((data:any)=>{
+      if(data.codRetorno=="0001"){
+        console.log(data);
+        this._uiService.loadingCarga(false);
+        this.imagenTemp = "";
+        this.userForm.get('foto').setValue(environment.URL_SERVIDOR_PHOTOS+'US/Matriculacion_Nuevos/persona/'+this.persona.iden+'/'+archivo.name)
+        this.updateUser();
+
+      }else{
+        this._uiService.alertErrorMessage('Ocurrio un error al subir la imagen');
+        this.imagenTemp = "";
+      }
+      }, error=>{
+        this._uiService.alertErrorMessage('Ocurrio un error al subir la imagen');
+        this.imagenTemp = "";
+      });
+         
+    }
 }

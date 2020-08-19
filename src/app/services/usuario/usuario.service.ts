@@ -105,12 +105,7 @@ export class UsuarioService {
   }
 
   cambiarPassword(formPassword){
-    let form = {
-      'login':this.usuario,
-      'oldPassword':formPassword.passwordOld,
-      'newPassword':formPassword.passwordNew
-    }
-    return this.http.post(environment.URL_SERVICIOS_SEGURIDAD+'/updatePassword',form)
+    return this.http.post(environment.URL_SERVICIOS+'/usuario/updatePwd ',formPassword)
   }
 
   newPassword(formPassword,idUsuario){
@@ -132,9 +127,18 @@ export class UsuarioService {
   }
 
   recuperarPass(user){
-    return this.http.get(environment.URL_SERVICIOS_SEGURIDAD+'/forgotPassword/'+user+'/'+environment.idAplicacion)
+    return this.http.get(environment.URL_SERVICIOS+'/persona/findById/'+user)
   }
 
-
+  subirImagenFTPPerfil( archivo: File,cedulaPersona) {
+    let dataFTP:FormData = new FormData();
+    let tipoFtp = "US";
+    dataFTP.append('path', '/Matriculacion_Nuevos/persona/'+cedulaPersona+'/')
+    dataFTP.append('tipo', tipoFtp)
+    dataFTP.append('file',archivo, archivo.name);
+    dataFTP.append('nombreImagen',archivo.name);
+  
+    return this.http.post(environment.URL_SERVICIOS_FILE+'/upload',dataFTP);
+  }
 
 }
