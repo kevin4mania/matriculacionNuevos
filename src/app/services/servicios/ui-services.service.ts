@@ -53,7 +53,7 @@ export class UiServicesService {
 
     let dataMail:FormData = new FormData();
     dataMail.append('to', mail)
-    dataMail.append('subject', 'Recuperación de contraseña del sistema de control de asistencia AMT')
+    dataMail.append('subject', 'Recuperación de contraseña del sistema de Matriculación de Vehículos Nuevos')
     dataMail.append('text', text)
     dataMail.append('param1', nombres)
     dataMail.append('param2', '')
