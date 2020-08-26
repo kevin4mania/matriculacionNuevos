@@ -40,17 +40,17 @@ export class ForgotPasswordComponent implements OnInit {
       //showCloseButton: true,
       onBeforeOpen: () => {
         Swal.showLoading()
-        this._usuarioService.recuperarPass(user).subscribe((respuesta:any)=>{
+        this._usuarioService.recuperarPass(29).subscribe((respuesta:any)=>{
           if(respuesta.codRetorno=='0001'){
-            let mail = respuesta.retorno.correo;
-            let nombres = respuesta.retorno.nombres;
+            let mail = respuesta.retorno.mail;
+            let nombres = respuesta.retorno.nom +' '+respuesta.retorno.ape;
 
-            let idUsuario = respuesta.retorno.idUsuario;
+            let idUsuario = respuesta.retorno.idPC;
             var b64 = CryptoJS.AES.encrypt(idUsuario.toString(), this.tokenFromUI).toString();
             var e64 = CryptoJS.enc.Base64.parse(b64);
             var encriptado = e64.toString(CryptoJS.enc.Hex);
-            //let url = "http://localhost:4200/#/changePassword/"+encriptado;
-            let url = "http://servicios.amt.gob.ec/web/controlAsistencia/#/changePassword/"+encriptado;
+            let url = "http://localhost:4200/#/changePassword/"+encriptado;
+            //let url = "http://servicios.amt.gob.ec/web/test/matriculacionNuevos/#/changePassword/"+encriptado;
             
             this._uiService.enviarCorreo(mail,'Para restablecer su contraseña, ingrese al siguiente link <br> <a href="'+url+'">'+url+'</a>', nombres).subscribe((resp:any)=>{
               let totalLetrasMail = mail.indexOf("@")-2;
