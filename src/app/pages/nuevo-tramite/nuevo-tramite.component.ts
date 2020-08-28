@@ -117,9 +117,9 @@ export class NuevoTramiteComponent implements OnInit {
         esta:new FormControl('CHG'),
     })
 
-    this.formulario.controls.matFVH['controls'].raDu.setAsyncValidators([
+   /* this.formulario.controls.matFVH['controls'].raDu.setAsyncValidators([
        this.existeRaDu.bind(this),
-    ]);
+    ]);*/
   }
 
   validacionCedula(control: FormControl) {
@@ -330,7 +330,7 @@ editarPropVeh(idPro){
   });
 }
 
-existeRaDu(control: FormControl): Promise<any>|Observable<any> {
+/*existeRaDu(control: FormControl): Promise<any>|Observable<any> {
   const promesa = new Promise(
     (resolve, reject) => {
       return this.servicios.getVehiculoByCriterio('*','*',control.value,'ACT','*','1','999999').subscribe((res:any) => {
@@ -340,7 +340,7 @@ existeRaDu(control: FormControl): Promise<any>|Observable<any> {
     }
   );
   return promesa;
-}
+}*/
 
 getErrorMessageCedula() {
   if (this.formulario.controls.matFPV['controls'].iden.hasError('required')) {

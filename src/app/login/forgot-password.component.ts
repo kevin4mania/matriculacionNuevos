@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2'
 import { UiServicesService } from '../services/servicios/ui-services.service';
 import * as CryptoJS from 'crypto-js';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-forgot-password',
@@ -48,9 +49,8 @@ export class ForgotPasswordComponent implements OnInit {
             let idUsuario = respuesta.retorno.idPC;
             var b64 = CryptoJS.AES.encrypt(idUsuario.toString(), this.tokenFromUI).toString();
             var e64 = CryptoJS.enc.Base64.parse(b64);
-            var encriptado = e64.toString(CryptoJS.enc.Hex);
-            let url = "http://localhost:4200/#/changePassword/"+encriptado;
-            //let url = "http://servicios.amt.gob.ec/web/test/matriculacionNuevos/#/changePassword/"+encriptado;
+            var idUsuarioEncriptado = e64.toString(CryptoJS.enc.Hex);
+            let url = environment.url+"#/changePassword/"+idUsuarioEncriptado;
             
             this._uiService.enviarCorreo(mail,'Para restablecer su contraseña, ingrese al siguiente link <br> <a href="'+url+'">'+url+'</a>', nombres).subscribe((resp:any)=>{
               let totalLetrasMail = mail.indexOf("@")-2;
