@@ -152,48 +152,4 @@ export class PerfilComponent implements OnInit {
     });
    }
 
-   async seleccionImage(archivo: File){
-    if(!archivo){
-      this.imagenSubir = null;
-      return;
-    }
-
-    if ( archivo.type.indexOf('image') < 0 ) {
-      this._uiService.alertErrorMessage('El formato de imagen no es correcto');
-      this.imagenSubir = null;
-      return;
-    }
-
-    if(archivo.size > 357336 ){
-      this._uiService.alertErrorMessage('La imagen no puede superar los 350kb');
-      this.imagenSubir = null;
-      return;
-    }
-
-    this._uiService.loadingCarga(true);
-    this.imagenSubir = archivo;
-    const reader = new FileReader();
-
-    const urlImagenTemp = reader.readAsDataURL( archivo );
-    reader.onloadend = () => this.imagenTemp = reader.result;
-
-    
-    this._usuarioService.subirImagenFTPPerfil(this.imagenSubir,this.persona.iden).subscribe((data:any)=>{
-      if(data.codRetorno=="0001"){
-        console.log(data);
-        this._uiService.loadingCarga(false);
-        this.imagenTemp = "";
-        this.userForm.get('foto').setValue(environment.URL_SERVIDOR_PHOTOS+'US/Matriculacion_Nuevos/persona/'+this.persona.iden+'/'+archivo.name)
-        this.updateUser();
-
-      }else{
-        this._uiService.alertErrorMessage('Ocurrio un error al subir la imagen');
-        this.imagenTemp = "";
-      }
-      }, error=>{
-        this._uiService.alertErrorMessage('Ocurrio un error al subir la imagen');
-        this.imagenTemp = "";
-      });
-         
-    }
 }

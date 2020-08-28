@@ -110,12 +110,10 @@ export class UsuarioService {
 
   newPassword(formPassword,idUsuario){
     let form = {
-      'codigo':idUsuario,
-      'valor':formPassword.passwordNew,
-      "aux1": "",
-      "aux2": "",
+      'idUC ':idUsuario,
+      'newPwd':formPassword.passwordNew,
     }
-    return this.http.post(environment.URL_SERVICIOS_SEGURIDAD+'/updatePassForgot',form)
+    return this.http.post(environment.URL_SERVICIOS+'/usuario/updateNewPwd',form)
   }
 
   getPersona(idPersona){
@@ -129,16 +127,4 @@ export class UsuarioService {
   recuperarPass(user){
     return this.http.get(environment.URL_SERVICIOS+'/persona/findById/'+user)
   }
-
-  subirImagenFTPPerfil( archivo: File,cedulaPersona) {
-    let dataFTP:FormData = new FormData();
-    let tipoFtp = "US";
-    dataFTP.append('path', '/Matriculacion_Nuevos/persona/'+cedulaPersona+'/')
-    dataFTP.append('tipo', tipoFtp)
-    dataFTP.append('file',archivo, archivo.name);
-    dataFTP.append('nombreImagen',archivo.name);
-  
-    return this.http.post(environment.URL_SERVICIOS_FILE+'/upload',dataFTP);
-  }
-
 }
