@@ -5,7 +5,7 @@
 export const environment = {
   //APIS
   URL_SERVICIOS:'http://192.168.1.119:10021/testApiMatVehNuevos',
-  URL_SERVICIOS_CORREO : 'http://172.20.68.122:8080/micro_sendMail-0.0.1/mail/sendBasic',
+  URL_SERVICIOS_CORREO : 'http://172.20.68.122:8080/micro_matriculacionMail-0.0.1/mailMatriculacion/sendBasic',
   URL_REPORTE:'http://192.168.1.119:10021/reporte_nuevos',
   //rango de paginacion
   rango : 10,

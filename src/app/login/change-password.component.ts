@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { UsuarioService } from '../services/service.index';
+import { UsuarioService, UiServicesService } from '../services/service.index';
 import Swal from 'sweetalert2'
 import { ActivatedRoute } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
@@ -19,6 +19,7 @@ export class ChangePasswordComponent implements OnInit {
     public _usuarioService: UsuarioService,
     private activeRoute:ActivatedRoute,
     public router: Router,
+    public _uiService: UiServicesService,
     ) { }
 
   ngOnInit() {
@@ -64,6 +65,7 @@ export class ChangePasswordComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.value) {
+        this._uiService.loadingCarga(true);
         this._usuarioService.newPassword(this.passwordForm.value,this.idUsuario).subscribe((resp:any)=>{
           if(resp.codRetorno=='0001'){
             this.passwordForm.reset();

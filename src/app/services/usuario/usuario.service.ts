@@ -110,7 +110,7 @@ export class UsuarioService {
 
   newPassword(formPassword,idUsuario){
     let form = {
-      'idUC ':idUsuario,
+      'idUC':idUsuario,
       'newPwd':formPassword.passwordNew,
     }
     return this.http.post(environment.URL_SERVICIOS+'/usuario/updateNewPwd',form)
@@ -125,6 +125,6 @@ export class UsuarioService {
   }
 
   recuperarPass(user){
-    return this.http.get(environment.URL_SERVICIOS+'/persona/findById/'+user)
+    return this.http.get(environment.URL_SERVICIOS+'/usuario/findPersona01ByLogi/'+user)
   }
 }

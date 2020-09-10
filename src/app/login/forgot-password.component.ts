@@ -41,12 +41,13 @@ export class ForgotPasswordComponent implements OnInit {
       //showCloseButton: true,
       onBeforeOpen: () => {
         Swal.showLoading()
-        this._usuarioService.recuperarPass(29).subscribe((respuesta:any)=>{
+        this._usuarioService.recuperarPass(user).subscribe((respuesta:any)=>{
           if(respuesta.codRetorno=='0001'){
+           
             let mail = respuesta.retorno.mail;
             let nombres = respuesta.retorno.nom +' '+respuesta.retorno.ape;
-
-            let idUsuario = respuesta.retorno.idPC;
+            let idUsuario = respuesta.retorno.idUC;
+            
             var b64 = CryptoJS.AES.encrypt(idUsuario.toString(), this.tokenFromUI).toString();
             var e64 = CryptoJS.enc.Base64.parse(b64);
             var idUsuarioEncriptado = e64.toString(CryptoJS.enc.Hex);

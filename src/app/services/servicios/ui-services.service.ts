@@ -60,7 +60,7 @@ export class UiServicesService {
     dataMail.append('param3', '')
     dataMail.append('param4', '')
     dataMail.append('param5', '')
-    dataMail.append('tipo', '5')
+    dataMail.append('tipo', '7')
 
     return this.http.post(environment.URL_SERVICIOS_CORREO,dataMail);
   }
