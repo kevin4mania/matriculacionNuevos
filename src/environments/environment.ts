@@ -17,7 +17,9 @@ export const environment = {
   url:'http://localhost:4200/',
   //NOMBRE DE APLICACION
   nombreAplicaion:'matriculacionNuevos',
-
+  //VERSION DE APP
+  versionApp: 'v2.0',
+  
   production: false
 
 };

@@ -14,6 +14,8 @@ export const environment = {
   url:'http://servicios.amt.gob.ec/web/matriculacionNuevos/',
   //NOMBRE DE APLICACION
   nombreAplicaion:'matriculacionNuevos',
-
+  //VERSION DE APP
+  versionApp: 'v2.0',
+  
   production: true
 };

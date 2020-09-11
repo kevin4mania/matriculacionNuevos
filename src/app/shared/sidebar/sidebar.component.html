@@ -1,7 +1,7 @@
 <div class="app-sidebar colored">
     <div class="sidebar-header">
         <a class="header-brand" routerLink="">
-            <span class="text" style="font-size: 18px; align-content: center">{{_usuarioService.consecionario.nom}}</span>
+            <span class="text" style="font-size: 18px; align-content: center">{{_usuarioService.consecionario.nom | slice:0:15}}...</span>
         </a>
         <button id="sidebarClose" class="nav-close"><i class="ik ik-x"></i></button>
     </div>
