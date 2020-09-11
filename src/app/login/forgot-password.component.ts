@@ -15,6 +15,8 @@ import { environment } from 'src/environments/environment';
 export class ForgotPasswordComponent implements OnInit {
   tokenFromUI: string = "0123456789123456";
   user:string;
+  textoMail: string;
+
   constructor(
     public router: Router,
     public _usuarioService: UsuarioService,
@@ -52,8 +54,14 @@ export class ForgotPasswordComponent implements OnInit {
             var e64 = CryptoJS.enc.Base64.parse(b64);
             var idUsuarioEncriptado = e64.toString(CryptoJS.enc.Hex);
             let url = environment.url+"#/changePassword/"+idUsuarioEncriptado;
+
+            let header = 'Estimad@: <b>'+nombres+'</b>';
+            let body = '<br><br>Para restablecer su contraseña, ingrese al siguiente link <br> <a href="'+url+'">'+url+'</a><br><br>';
+            let footer = '<div>Saludos Cordiales,</div><div><b><u>Agencia Metropolitana de Tránsito</u></b></div><div>'+
+            '<br><b>Nota:</b> Este correo fue generado de forma automática y no requiere respuesta.</div><br> #QuitoGrandeOtraVez<br><img width="150px" src="https://pam.quito.gob.ec/PAM/img/quito2019.png">'
+           this.textoMail= header+body+footer
             
-            this._uiService.enviarCorreo(mail,'Para restablecer su contraseña, ingrese al siguiente link <br> <a href="'+url+'">'+url+'</a>', nombres).subscribe((resp:any)=>{
+            this._uiService.enviarCorreo(mail,this.textoMail, nombres).subscribe((resp:any)=>{
               let totalLetrasMail = mail.indexOf("@")-2;
               let mailProtegido = mail.replace(mail.substring(1,totalLetrasMail), '*'.repeat(totalLetrasMail-1));
                 Swal.fire({
