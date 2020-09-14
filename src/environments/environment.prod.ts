@@ -11,7 +11,8 @@ export const environment = {
   //ID DE APLICACION DE LA BD
   idAplicacion: '4',
   //URL DE APLICACION
-  url:'http://servicios.amt.gob.ec/web/matriculacionNuevos/',
+  //url:'http://servicios.amt.gob.ec/web/matriculacionNuevos/',
+  url:'http://192.168.1.192/web/matriculacionNuevos/',
   //NOMBRE DE APLICACION
   nombreAplicaion:'matriculacionNuevos',
   //VERSION DE APP
