@@ -64,10 +64,9 @@ export class NuevoTramiteComponent implements OnInit {
     this.servicios.getTramiteLisVehPropById(idTramite).subscribe((resp: any) => {
         if(resp.codRetorno=='0001')
         {
-          console.log(resp.retorno);
           this.tramite = resp.retorno.matFTR;
           this.gestor=resp.retorno.gestor;
-          this.getSucursalesByIdPersona(this.usuario.sucursal.idSC);
+          this.getPersonasByIdConsesionario(this.usuario.consecionario.idCN);
           this.cars = resp.retorno.lstPropVeh;
           this._uiService.loadingCarga(false);
         }else{
@@ -358,8 +357,8 @@ getErrorMessageCorreo() {
   return this.formulario.controls.matFPV['controls'].mail.hasError('email') ? 'No es un correo válido' : '';
 }
 
-getSucursalesByIdPersona(idSucursal){
-  this.servicios.getPersonasByIdSucursal(idSucursal).subscribe((resp:any)=>{
+getPersonasByIdConsesionario(idConsesionario){
+  this.servicios.getPersonasByIdConsesionario(idConsesionario).subscribe((resp:any)=>{
     if(resp.codRetorno=='0001')
       {
         this.gestores = resp.retorno;
