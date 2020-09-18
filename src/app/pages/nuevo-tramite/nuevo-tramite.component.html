@@ -16,7 +16,7 @@
                                 <mat-form-field class="example-full-width" appearance="fill" *ngIf="tramite.esta=='GEN' && cars.length>0">
                                     <select matNativeControl formControlName="idPc" required>
                                         <option selected disabled value="">Seleccionar Gestor</option>
-                                        <option *ngFor="let gestor of gestores" value="{{gestor.idPC}}" >{{gestor.nom}} {{gestor.ape}}</option>
+                                        <option *ngFor="let gestor of gestores" value="{{gestor.matFPC.idPC}}" >{{gestor.matFPC.nom}} {{gestor.matFPC.ape}}</option>
                                       </select>
                                 </mat-form-field>
                                 <h6 class="pt-0 pb-10" *ngIf="tramite.esta=='CHG'">{{gestor.nom}} {{gestor.ape}}</h6>
