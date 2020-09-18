@@ -18,7 +18,7 @@ export const environment = {
   //NOMBRE DE APLICACION
   nombreAplicaion:'matriculacionNuevos',
   //VERSION DE APP
-  versionApp: 'v2.0',
+  versionApp: 'v2.1',
   
   production: false
 
