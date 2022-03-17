@@ -4,9 +4,12 @@
 
 export const environment = {
   //APIS
-  URL_SERVICIOS:'http://192.168.1.119:10021/testApiMatVehNuevos',
+  //URL_SERVICIOS:'http://192.168.1.119:10021/testApiMatVehNuevos',
+  URL_SERVICIOS:'http://172.20.68.76:9080/apiMatVehNuevos',
   URL_SERVICIOS_CORREO : 'http://172.20.68.122:8080/micro_matriculacionMail-0.0.1/mailMatriculacion/sendBasic',
   URL_REPORTE:'http://192.168.1.119:10021/reporte_nuevos',
+  // URL_SERVICIOS_DOCUMENTOS: 'http://186.47.204.228:10061/testapi_documentos',
+  URL_SERVICIOS_DOCUMENTOS: 'http://172.20.68.52:9080/api_documentos',
   //rango de paginacion
   rango : 10,
 
@@ -20,7 +23,9 @@ export const environment = {
   //VERSION DE APP
   versionApp: 'v2.1',
   
-  production: false
+  production: false,
+  FILES_NOMBRE_TABLA:'MATFVH',
+  FILES_NOMBRE_ESQUEMA:'XPAMTDRAV01',
 
 };
 

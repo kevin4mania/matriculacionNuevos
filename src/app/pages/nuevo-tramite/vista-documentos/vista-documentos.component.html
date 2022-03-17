@@ -1,0 +1,68 @@
+<div class="row">
+  <div class="col-12" style="width: 850px; height: 550px">
+    <div class="col-12">Archivos</div>
+
+    <div class="row">
+      <div class="col-3" *ngFor="let file of tempFilesServ; let i = index">
+        <div class="widget social-widget">
+          <div class="widget-body">
+            <mat-icon>picture_as_pdf</mat-icon>
+            <!-- <div class="icon">
+              <i class="fa-solid fa-file-pdf"></i>
+            </div> -->
+            <div class="content">
+              <div class="text">{{ file.nombreDocumento }}</div>
+              <div class="">
+                <button
+                  mat-icon-button
+                  (click)="eliminarArchivo($event, i, file.idDocumento)"
+                  color="warn"
+                  aria-label="Example icon button with a heart icon"
+                >
+                  <mat-icon color="warn">delete</mat-icon>
+                </button>
+
+                <button
+                  mat-icon-button
+                  (click)="downloadPdf(file.base64, file.nombreDocumento)"
+                  color="warn"
+                  aria-label="Example icon button with a heart icon"
+                >
+                  <mat-icon color="warn">arrow_downward</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6 text-left">
+        <hr />
+        <button (click)="subirArchivos()" class="btn btn-primary" *ngIf="isArchivoCargado">
+          Subir Archivos
+        </button>
+      </div>
+
+      <div class="col-6 text-right">
+        <input
+          type="file"
+          #file
+          multiple
+          hidden
+          (change)="seleccionarArchivo($event.target.files)"
+          accept="application/pdf"
+        />
+        <hr />
+        <button
+          (click)="file.click($event.preventDefault())"
+          class="btn btn-primary"
+        >
+          Agregar Archivos
+        </button>
+        <!-- <button class="btn btn-primary">Subir Archivos</button> -->
+      </div>
+    </div>
+  </div>
+</div>

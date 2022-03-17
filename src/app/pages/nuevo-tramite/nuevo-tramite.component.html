@@ -1,383 +1,719 @@
 <div class="card">
-    <div class="card-body">
-        <div class="row">
-            <div class="col-lg-3 col-md-12 col-sm-12">
-                <div class="widget border border-primary" *ngIf="tramite !=null">
-                    <div class="widget-body" [formGroup]="formularioTramite">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="state">
-                                <strong class="mb-0"> Número de Trámite</strong>
-                                <h6 class="pt-0 pb-10">{{tramite.nmTr}}</h6>
-                                <strong class="mb-0"> Usuario Creador</strong>
-                                <h6 class="pt-0 pb-10">{{tramite.usCr}}</h6>
-                                <strong class="mb-0">Fecha de Elaboración</strong>
-                                <h6 class="pt-0 pb-10">{{tramite.feCr | date:"MM/dd/yyyy"}}</h6>
-                                <strong *ngIf="cars.length>0" class="mb-0">Gestor Autorizado</strong>
-                                <mat-form-field class="example-full-width" appearance="fill" *ngIf="tramite.esta=='GEN' && cars.length>0">
-                                    <select matNativeControl formControlName="idPc" required>
-                                        <option selected disabled value="">Seleccionar Gestor</option>
-                                        <option *ngFor="let gestor of gestores" value="{{gestor.matFPC.idPC}}" >{{gestor.matFPC.nom}} {{gestor.matFPC.ape}}</option>
-                                      </select>
-                                </mat-form-field>
-                                <h6 class="pt-0 pb-10" *ngIf="tramite.esta=='CHG'">{{gestor.nom}} {{gestor.ape}}</h6>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 text-right" *ngIf="tramite !=null && tramite.esta=='GEN'">
-                                <button type="button" class=" btn btn-primary" (click)="showDialogToAdd()">Agregar Vehículo y Propietario</button>
-                            </div>
-                            <div class="col-12 text-right mt-5 mb-5" *ngIf="tramite !=null && cars.length>0 && tramite.esta=='GEN'">
-                                <button type="button" class=" btn btn-success" [disabled]="!formularioTramite.valid" (click)="finalizarTramite()">Finalizar Trámite</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-3 col-md-12 col-sm-12">
+        <div class="widget border border-primary" *ngIf="tramite != null">
+          <div class="widget-body" [formGroup]="formularioTramite">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="state">
+                <strong class="mb-0"> Número de Trámite</strong>
+                <h6 class="pt-0 pb-10">{{ tramite.nmTr }}</h6>
+                <strong class="mb-0"> Usuario Creador</strong>
+                <h6 class="pt-0 pb-10">{{ tramite.usCr }}</h6>
+                <strong class="mb-0">Fecha de Elaboración</strong>
+                <h6 class="pt-0 pb-10">
+                  {{ tramite.feCr | date: "MM/dd/yyyy" }}
+                </h6>
+                <strong *ngIf="cars.length > 0" class="mb-0"
+                  >Gestor Autorizado</strong
+                >
+                <mat-form-field
+                  class="example-full-width"
+                  appearance="fill"
+                  *ngIf="tramite.esta == 'GEN' && cars.length > 0"
+                >
+                  <select matNativeControl formControlName="idPc" required>
+                    <option selected disabled value="">
+                      Seleccionar Gestor
+                    </option>
+                    <option
+                      *ngFor="let gestor of gestores"
+                      value="{{ gestor.matFPC.idPC }}"
+                    >
+                      {{ gestor.matFPC.nom }} {{ gestor.matFPC.ape }}
+                    </option>
+                  </select>
+                </mat-form-field>
+                <h6 class="pt-0 pb-10" *ngIf="tramite.esta == 'CHG'">
+                  {{ gestor.nom }} {{ gestor.ape }}
+                </h6>
+              </div>
             </div>
-            <div class="col-lg-9 col-md-12 col-sm-12" *ngIf="tramite !=null">
-                <p-table #dt [value]="cars" dataKey="matFPV.idPV" styleClass="ui-table-customers" [rowHover]="true" [rows]="5" [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10,25,50]" [loading]="loading" [paginator]="true" [filterDelay]="0" [globalFilterFields]="['matFVH.raDu','matFPV.iden','matFPV.ape','matFPV.nom','matFPV.faDe']">
-                    <ng-template pTemplate="caption">
-                        Listado de Vehículos y Propietarios
-                        <div class="ui-table-globalfilter-container">
-                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar" />
+            <div class="row">
+              <div
+                class="col-12 text-right"
+                *ngIf="tramite != null && tramite.esta == 'GEN'"
+              >
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="showDialogToAdd()"
+                >
+                  Agregar Vehículo y Propietario
+                </button>
+              </div>
+              <div
+                class="col-12 text-right mt-5 mb-5"
+                *ngIf="
+                  tramite != null && cars.length > 0 && tramite.esta == 'GEN'
+                "
+              >
+                <button
+                  type="button"
+                  class="btn btn-success"
+                  [disabled]="!formularioTramite.valid"
+                  (click)="finalizarTramite()"
+                >
+                  Finalizar Trámite
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-9 col-md-12 col-sm-12" *ngIf="tramite != null">
+        <p-table
+          #dt
+          [value]="cars"
+          dataKey="matFPV.idPV"
+          styleClass="ui-table-customers"
+          [rowHover]="true"
+          [rows]="5"
+          [showCurrentPageReport]="true"
+          [rowsPerPageOptions]="[5, 10, 25, 50]"
+          [loading]="loading"
+          [paginator]="true"
+          [filterDelay]="0"
+          [globalFilterFields]="[
+            'matFVH.raDu',
+            'matFPV.iden',
+            'matFPV.ape',
+            'matFPV.nom',
+            'matFPV.faDe'
+          ]"
+        >
+          <ng-template pTemplate="caption">
+            Listado de Vehículos y Propietarios
+            <div class="ui-table-globalfilter-container">
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($event.target.value, 'contains')"
+                placeholder="Buscar"
+              />
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th style="width: 3em"></th>
+              <th pSortableColumn="matFVH.raDu">
+                RAMV/DUI
+                <p-sortIcon field="matFVH.raDu"></p-sortIcon>
+              </th>
+              <th pSortableColumn="matFVH.grav">
+                Gravamen
+                <p-sortIcon field="matFVH.grav"></p-sortIcon>
+              </th>
+              <th pSortableColumn="matFPV.iden">
+                Identificación
+                <p-sortIcon field="matFPV.iden"></p-sortIcon>
+              </th>
+              <th>Propietario</th>
+              <th>A favor de</th>
+              <th style="width: 4em"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-customer let-expanded="expanded">
+            <tr class="ui-selectable-row">
+              <td>
+                <a href="#" [pRowToggler]="customer">
+                  <i
+                    [ngClass]="
+                      expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'
+                    "
+                  ></i>
+                </a>
+              </td>
+              <td>
+                <span class="ui-column-title">RAMV/DUI</span>
+                {{ customer.matFVH.raDu }}
+              </td>
+              <td>
+                <span class="ui-column-title">Gravamen</span>
+                <span [class]="'customer-badge status-' + customer.matFVH.grav">
+                  {{ customer.matFVH.grav }}</span
+                >
+              </td>
+              <td>
+                <span class="ui-column-title">Identificación</span>
+                {{ customer.matFPV.iden }}
+              </td>
+              <td *ngIf="customer.matFPV.rzSo == ''">
+                <span class="ui-column-title">Propietario</span>
+                {{ customer.matFPV.nom }} {{ customer.matFPV.ape }}
+              </td>
+              <td *ngIf="customer.matFPV.rzSo != ''">
+                <span class="ui-column-title">Propietario</span>
+                {{ customer.matFPV.rzSo }}
+              </td>
+              <td>
+                <span class="ui-column-title">A favor de</span>
+                {{ customer.matFVH.faDe }}
+              </td>
+              <td>
+                <button
+                  pButton
+                  type="button"
+                  *ngIf="tramite.esta == 'GEN'"
+                  class="ui-button-primary"
+                  icon="pi pi-pencil"
+                  (click)="editarPropVeh(customer.matFPV.idPV)"
+                ></button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="rowexpansion" let-customer>
+            <tr>
+              <td [attr.colspan]="7">
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12">
+                    <div class="widget border border-primary">
+                      <div class="widget-body">
+                        <h6 class="mb-15">Información de Propietario</h6>
+                        <div class="row">
+                          <div class="col-lg-6">
+                            <div
+                              class="d-flex justify-content-between align-items-center"
+                            >
+                              <div class="state">
+                                <strong class="mb-0">Identificación</strong>
+                                <h6 class="pt-0 pb-10">
+                                  {{ customer.matFPV.iden }}
+                                </h6>
+                                <strong class="mb-0">Propietario</strong>
+                                <h6
+                                  class="pt-0 pb-10"
+                                  *ngIf="customer.matFPV.rzSo == ''"
+                                >
+                                  {{ customer.matFPV.nom }}
+                                  {{ customer.matFPV.ape }}
+                                </h6>
+                                <h6
+                                  class="pt-0 pb-10"
+                                  *ngIf="customer.matFPV.rzSo != ''"
+                                >
+                                  {{ customer.matFPV.rzSo }}
+                                </h6>
+                                <strong class="mb-0"
+                                  >Dirección Domiciliaria</strong
+                                >
+                                <h6 class="pt-0 pb-10">
+                                  {{ customer.matFPV.caPr }} y
+                                  {{ customer.matFPV.caSe }},
+                                  {{ customer.matFPV.nmLt }}
+                                </h6>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-lg-6">
+                            <div
+                              class="d-flex justify-content-between align-items-center"
+                            >
+                              <div class="state">
+                                <strong class="mb-0">Número Telefónico</strong>
+                                <h6 class="pt-0 pb-10">
+                                  {{ customer.matFPV.tlCv }}
+                                </h6>
+                                <strong class="mb-0">Número Celular</strong>
+                                <h6 class="pt-0 pb-10">
+                                  {{ customer.matFPV.tlCl }}
+                                </h6>
+                                <strong class="mb-0">Correo Electrónico</strong>
+                                <h6 class="pt-0 pb-10">
+                                  {{ customer.matFPV.mail }}
+                                </h6>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                    </ng-template>
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
-                            <th style="width: 3em"></th>
-                            <th pSortableColumn="matFVH.raDu">RAMV/DUI
-                                <p-sortIcon field="matFVH.raDu"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="matFVH.grav">Gravamen
-                                <p-sortIcon field="matFVH.grav"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="matFPV.iden">Identificación
-                                <p-sortIcon field="matFPV.iden"></p-sortIcon>
-                            </th>
-                            <th>
-                                Propietario
-                            </th>
-                            <th>
-                                A favor de
-                            </th>
-                            <th style="width: 4em"></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-customer let-expanded="expanded">
-                        <tr class="ui-selectable-row">
-                            <td>
-                                <a href="#" [pRowToggler]="customer">
-                                    <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
-                                </a>
-                            </td>
-                            <td>
-                                <span class="ui-column-title">RAMV/DUI</span> {{customer.matFVH.raDu}}
-                            </td>
-                            <td>
-                                <span class="ui-column-title">Gravamen</span>
-                                <span [class]="'customer-badge status-' + customer.matFVH.grav"> {{customer.matFVH.grav}}</span>
-                            </td>
-                            <td>
-                                <span class="ui-column-title">Identificación</span> {{customer.matFPV.iden}}
-                            </td>
-                            <td *ngIf="customer.matFPV.rzSo==''">
-                                <span class="ui-column-title">Propietario</span> {{customer.matFPV.nom}} {{customer.matFPV.ape}}
-                            </td>
-                            <td *ngIf="customer.matFPV.rzSo!=''">
-                                <span class="ui-column-title">Propietario</span> {{customer.matFPV.rzSo}}
-                            </td>
-                            <td>
-                                <span class="ui-column-title">A favor de</span> {{customer.matFVH.faDe}}
-                            </td>
-                            <td>
-                                <button pButton type="button" *ngIf="tramite.esta=='GEN'" class="ui-button-primary" icon="pi pi-pencil" (click)="editarPropVeh(customer.matFPV.idPV)"></button>
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="rowexpansion" let-customer>
-                        <tr>
-                            <td [attr.colspan]="7">
-                                <div class="row">
-                                    <div class="col-lg-8 col-md-12 col-sm-12">
-                                        <div class="widget border border-primary">
-                                            <div class="widget-body">
-                                                <h6 class="mb-15"> Información de Propietario</h6>
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <div class="state">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-12 col-sm-12">
+                    <div class="widget border border-primary mb-2">
+                      <div class="widget-body">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <div class="state">
+                            <h6 class="mb-15">Información de Vehículo</h6>
+                            <strong class="mb-0">RAMV/DUI</strong>
+                            <h6 class="pt-0 pb-10">
+                              {{ customer.matFVH.raDu }}
+                            </h6>
+                            <strong class="mb-0">Gravamen</strong>
+                            <h6 class="pt-0 pb-10">
+                              {{ customer.matFVH.grav }}
+                            </h6>
+                            <strong class="mb-0">A favor de</strong>
+                            <h6 class="pt-0 pb-10">
+                              {{ customer.matFVH.faDe }}
+                            </h6>
+                            <strong class="mb-0">Observaciones</strong>
+                            <h6 class="pt-0 pb-10">
+                              {{ customer.matFVH.obse }}
+                            </h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--***Listas opciones***-->
+                <div class="row" *ngIf="tramite.esta == 'CHG'">
+                  <div class="col-lg-3 col-md-3">
+                    <div
+                      class="widget border border-primary social-widget"
+                      (click)="generarImpronta(customer.matFVH.idVH)"
+                      style="cursor: pointer"
+                    >
+                      <div class="widget-body p-0">
+                        <h2 class="text-facebook mt-2">
+                          <i class="fas fa-file-invoice"></i>
+                        </h2>
+                        <div class="content">
+                          <div class="text-facebook fw-700 mb-2">Impronta</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-3 col-md-3">
+                    <div
+                      class="widget border border-primary social-widget"
+                      (click)="
+                        generarCheckList(
+                          customer.matFVH.idVH,
+                          customer.matFVH.tipo
+                        )
+                      "
+                      style="cursor: pointer"
+                    >
+                      <div class="widget-body p-0">
+                        <h2 class="text-facebook mt-2">
+                          <i class="fas fa-clipboard-list"></i>
+                        </h2>
+                        <div class="content">
+                          <div class="text-facebook fw-700 mb-2">CheckList</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-3 col-md-3">
+                    <div
+                      class="widget border border-primary social-widget"
+                      (click)="generarCertificadoRuc(customer.matFVH.idVH)"
+                      style="cursor: pointer"
+                    >
+                      <div class="widget-body p-0">
+                        <h2 class="text-facebook mt-2">
+                          <i class="fas fa-file-alt"></i>
+                        </h2>
+                        <div class="content">
+                          <div class="text-facebook fw-700 mb-2">
+                            Certificado RUC
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-3 col-md-3">
+                      <!--(click)="cargarComponenteArchivos(customer)"-->
+                    <div
+                      class="widget border border-primary social-widget"
+                      (click)="cargarComponenteArchivos(customer)"
+                      style="cursor: pointer"
+                    >
+                      <div class="widget-body p-0">
+                        <h2 class="text-facebook mt-2">
+                          <i class="fas fa-file-alt"></i>
+                        </h2>
+                        <div class="content">
+                          <div class="text-facebook fw-700 mb-2">
+                            Cargar Archivos
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--***************-->
+              </td>
+            </tr>
+          </ng-template>
 
-                                                                <strong class="mb-0">Identificación</strong>
-                                                                <h6 class="pt-0 pb-10"> {{customer.matFPV.iden}}</h6>
-                                                                <strong class="mb-0">Propietario</strong>
-                                                                <h6 class="pt-0 pb-10" *ngIf="customer.matFPV.rzSo==''"> {{customer.matFPV.nom}} {{customer.matFPV.ape}}</h6>
-                                                                <h6 class="pt-0 pb-10" *ngIf="customer.matFPV.rzSo!=''"> {{customer.matFPV.rzSo}}</h6>
-                                                                <strong class="mb-0">Dirección Domiciliaria</strong>
-                                                                <h6 class="pt-0 pb-10">{{customer.matFPV.caPr}} y {{customer.matFPV.caSe}}, {{customer.matFPV.nmLt}} </h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <div class="state">
-                                                                <strong class="mb-0">Número Telefónico</strong>
-                                                                <h6 class="pt-0 pb-10"> {{customer.matFPV.tlCv}}</h6>
-                                                                <strong class="mb-0">Número Celular</strong>
-                                                                <h6 class="pt-0 pb-10"> {{customer.matFPV.tlCl}}</h6>
-                                                                <strong class="mb-0">Correo Electrónico</strong>
-                                                                <h6 class="pt-0 pb-10">{{customer.matFPV.mail}}</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row" *ngIf="tramite.esta=='CHG'">
-                                            <div class="col-lg-4 col-md-4">
-                                                <div class="widget border border-primary social-widget" (click)="generarImpronta(customer.matFVH.idVH)" style="cursor: pointer;">
-                                                    <div class="widget-body p-0">
-                                                        <h2 class="text-facebook mt-2"><i class="fas fa-file-invoice"></i></h2>
-                                                        <div class="content">
-                                                            <div class="text-facebook fw-700 mb-2">Impronta</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 col-md-4">
-                                                <div class="widget border border-primary social-widget" (click)="generarCheckList(customer.matFVH.idVH,customer.matFVH.tipo)" style="cursor: pointer;">
-                                                    <div class="widget-body p-0">
-                                                        <h2 class="text-facebook mt-2"><i class="fas fa-clipboard-list"></i></h2>
-                                                        <div class="content">
-                                                            <div class="text-facebook fw-700 mb-2">CheckList</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 col-md-4">
-                                                <div class="widget border border-primary social-widget" (click)="generarCertificadoRuc(customer.matFVH.idVH)" style="cursor: pointer;">
-                                                    <div class="widget-body p-0">
-                                                        <h2 class="text-facebook mt-2"><i class="fas fa-file-alt"></i></h2>
-                                                        <div class="content">
-                                                            <div class="text-facebook fw-700 mb-2">Certificado RUC</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-12 col-sm-12">
-                                        <div class="widget border border-primary mb-2">
-                                            <div class="widget-body">
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <div class="state">
-                                                        <h6 class="mb-15"> Información de Vehículo</h6>
-                                                        <strong class="mb-0">RAMV/DUI</strong>
-                                                        <h6 class="pt-0 pb-10">{{customer.matFVH.raDu}}</h6>
-                                                        <strong class="mb-0">Gravamen</strong>
-                                                        <h6 class="pt-0 pb-10">{{customer.matFVH.grav}}</h6>
-                                                        <strong class="mb-0">A favor de</strong>
-                                                        <h6 class="pt-0 pb-10">{{customer.matFVH.faDe}}</h6>
-                                                        <strong class="mb-0">Observaciones</strong>
-                                                        <h6 class="pt-0 pb-10">{{customer.matFVH.obse}}</h6>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-template>
-
-                    <!-- <ng-template pTemplate="summary" let-rowData>
+          <!-- <ng-template pTemplate="summary" let-rowData>
                         <div style="text-align:left">
                             <button type="button" pButton icon="fa fa-plus" (click)="showDialogToAdd()" label="Nuevo"></button>
                         </div>
                     </ng-template>-->
 
-                    <ng-template pTemplate="emptymessage">
-                        <tr>
-                            <td colspan="7" style="text-align:left">No hay ningun vehículo asignado a este trámite.</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </div>
-        </div>
-        <p-dialog header="Información Vehículo y propietario" [(visible)]="displayDialog" [contentStyle]="{'overflow-y': 'auto', 'overflow-x': 'hidden', 
-        'max-height': '80vh','min-height':'250px'}" [modal]="true" [style]="{width: '70vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
-            <div class="row">
-                <div class="col-12" [formGroup]="formulario">
-                    <ng-template matStepLabel>Formulario</ng-template>
-                    <div class="row mb-3 mt-3">
-                        <div class="col-md-7">
-                            <mat-card>
-                                <mat-card-header>
-                                    <mat-card-title>
-                                        Información del Propietario
-                                        <mat-divider></mat-divider>
-                                    </mat-card-title>
-                                </mat-card-header>
-
-                                <mat-card-content>
-                                    <div class="row">
-                                        <div class="col-md-12 col-lg-12 col-xl-6" formGroupName="matFPV">
-                                            <mat-form-field class="example-full-width" appearance="fill">
-                                                <mat-label>Tipo de Indentificación</mat-label>
-                                                <select matNativeControl #tipoIden formControlName="tipoIden" (change)="setTipoIdentificacion(tipoIden.value)" required>
-                                                    <option value="1" selected>Persona Natural</option>
-                                                    <option value="2">Empresa</option>
-                                                  </select>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-md-12 col-lg-12 col-xl-6" formGroupName="matFPV">
-                                            <mat-form-field>
-                                                <mat-label>Número de Cédula o RUC</mat-label>
-                                                <input maxlength="13" formControlName="iden" matInput required>
-                                                <mat-error *ngIf="formulario.controls.matFPV['controls'].iden.invalid">{{getErrorMessageCedula()}}</mat-error>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-md-12 col-lg-12 col-xl-12" formGroupName="matFPV" *ngIf="formulario.controls.matFPV['controls'].tipoIden.value =='2'">
-                                            <mat-form-field class="example-full-width">
-                                                <mat-label>Razon Social</mat-label>
-                                                <input maxlength="125" formControlName="rzSo" matInput>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-md-12 col-lg-12 col-xl-6" formGroupName="matFPV" *ngIf="formulario.controls.matFPV['controls'].tipoIden.value =='1'">
-                                            <mat-form-field class="example-full-width">
-                                                <mat-label>Nombres</mat-label>
-                                                <input maxlength="125" formControlName="nom" matInput>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-md-12 col-lg-12 col-xl-6" formGroupName="matFPV" *ngIf="formulario.controls.matFPV['controls'].tipoIden.value =='1'">
-                                            <mat-form-field class="example-full-width">
-                                                <mat-label>Apellidos</mat-label>
-                                                <input maxlength="125" formControlName="ape" matInput>
-                                            </mat-form-field>
-                                        </div>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
-                            <mat-card class="mt-3 mb-3">
-                                <mat-card-header>
-                                    <mat-card-title>
-                                        Información de Contacto y Ubicación
-                                        <mat-divider></mat-divider>
-                                    </mat-card-title>
-                                </mat-card-header>
-                                <mat-card-content>
-                                    <div class="row" formGroupName="matFPV">
-                                        <div class="col-md-12 col-lg-12 col-xl-6">
-                                            <mat-form-field class="example-full-width">
-                                                <mat-label>Calle Principal</mat-label>
-                                                <input maxlength="200" formControlName="caPr" matInput required>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-md-12 col-lg-12 col-xl-6">
-                                            <mat-form-field class="example-full-width">
-                                                <mat-label>Calle Secundaria</mat-label>
-                                                <input maxlength="200" formControlName="caSe" matInput required>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-md-12 col-lg-12 col-xl-6">
-                                            <mat-form-field class="example-full-width">
-                                                <mat-label>N° de casa o Lote</mat-label>
-                                                <input maxlength="60" formControlName="nmLt" matInput required>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-md-12 col-lg-12 col-xl-6">
-                                            <mat-form-field class="example-full-width">
-                                                <mat-label>Teléfono Convencional</mat-label>
-                                                <input maxlength="15" formControlName="tlCv" matInput placeholder="Ex. 023333333">
-                                                <!--<mat-error *ngIf="thirdFormGroup.controls.telConvencional.invalid">{{getErrorMessageTelConvencional()}}</mat-error>-->
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-md-12 col-lg-12 col-xl-6">
-                                            <mat-form-field class="example-full-width">
-                                                <mat-label>Teléfono Celular</mat-label>
-                                                <input maxlength="15" formControlName="tlCl" matInput placeholder="Ex. 09999999999" required>
-                                                <!-- <mat-error *ngIf="thirdFormGroup.controls.telCelular.invalid">{{getErrorMessageTelCelular()}}</mat-error>-->
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-md-12 col-lg-12 col-xl-6">
-                                            <mat-form-field class="example-full-width">
-                                                <mat-label>Correo</mat-label>
-                                                <input maxlength="60" formControlName="mail" matInput placeholder="Ex. mail@mail.com" required>
-                                                <mat-error *ngIf="formulario.controls.matFPV['controls'].mail.invalid">{{getErrorMessageCorreo()}}</mat-error>
-                                            </mat-form-field>
-                                        </div>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="row">
-                                <div class="col-md-12 mb-2">
-
-                                    <mat-card class="mt-3 mb-3" formGroupName="matFVH">
-                                        <mat-card-header>
-                                            <mat-card-title>
-                                                Información de Vehículo
-                                                <mat-divider></mat-divider>
-                                            </mat-card-title>
-                                        </mat-card-header>
-                                        <mat-card-content>
-                                            <mat-form-field class="example-full-width">
-                                                <mat-label>RAMV/DUI</mat-label>
-                                                <input formControlName="raDu" matInput maxlength="15" required>
-                                                <!-- <mat-error *ngIf="thirdFormGroup.controls.formularioMatricula.invalid">{{getErrorMessageformularioMatricula()}}</mat-error>-->
-                                            </mat-form-field>
-                                            <mat-form-field class="example-full-width" appearance="fill">
-                                                <mat-label>Tipo Vehículo</mat-label>
-                                                <select matNativeControl formControlName="tipo" required>
-                                                    <option value="2" selected>Particular</option>
-                                                    <option value="3">Público</option>
-                                                    <option value="4">Diplomático</option>
-                                                    <option value="5">Estatal</option>
-                                                    <option value="6">Importado</option>
-                                                    <option value="7">Régimen de internación temporal</option>
-                                                  </select>
-                                            </mat-form-field>
-                                            <section class="example-section">
-                                                <label class="example-margin">Gravamen:</label>
-                                                <mat-radio-group formControlName="grav">
-                                                    <mat-radio-button color="primary" (change)="changeAFavDe($event.value)" class="example-margin" value="Si">Si</mat-radio-button>
-                                                    <mat-radio-button color="primary" (change)="changeAFavDe($event.value)" class="example-margin" value="No">No</mat-radio-button>
-                                                </mat-radio-group>
-                                            </section>
-                                            <mat-form-field class="example-full-width">
-                                                <mat-label>A favor de</mat-label>
-                                                <input maxlength="125" formControlName="faDe" matInput>
-                                            </mat-form-field>
-                                            <mat-form-field class="example-full-width">
-                                                <mat-label class="example-full-width">Observaciones</mat-label>
-                                                <textarea formControlName="obse" rows="5" matInput></textarea>
-                                            </mat-form-field>
-                                        </mat-card-content>
-                                    </mat-card>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-            <p-footer>
-                <div class="ui-dialog-buttonpane ui-helper-clearfix ">
-                    <button type="button" [disabled]="formulario.invalid" pButton icon="fa fa-check " *ngIf="newCar" (click)="save()" label="Guardar"></button>
-                    <button type="button" [disabled]="formulario.invalid" pButton icon="fa fa-check " *ngIf="!newCar" (click)="edit()" label="Actualizar"></button>
-                    <button type="button" [disabled]="formulario.invalid" pButton icon="fa fa-trash " class="ui-button-danger" *ngIf="!newCar" (click)="delete()" label="Eliminar"></button>
-                </div>
-            </p-footer>
-        </p-dialog>
-        <div class="row mt-10">
-            <div class="col-12 text-center mt-5 mb-5" *ngIf="tramite !=null">
-                <button type="button" *ngIf="tramite.esta=='CHG'" class="btn btn-primary" (click)="generarSobre()">Generar Sobre</button>
-                <button type="button" *ngIf="tramite.esta=='CHG'" class="ml-1 btn btn-primary" (click)="generarListado()">Generar Listado</button>
-                <button class="ml-1 btn btn-secondary" routerLink="/tramites">Regresar</button>
-            </div>
-        </div>
-
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7" style="text-align: left">
+                No hay ningun vehículo asignado a este trámite.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
     </div>
+    <p-dialog
+      header="Información Vehículo y propietario"
+      [(visible)]="displayDialog"
+      [contentStyle]="{
+        'overflow-y': 'auto',
+        'overflow-x': 'hidden',
+        'max-height': '80vh',
+        'min-height': '250px'
+      }"
+      [modal]="true"
+      [style]="{ width: '70vw' }"
+      [baseZIndex]="10000"
+      [draggable]="false"
+      [resizable]="false"
+    >
+      <div class="row">
+        <div class="col-12" [formGroup]="formulario">
+          <ng-template matStepLabel>Formulario</ng-template>
+          <div class="row mb-3 mt-3">
+            <div class="col-md-7">
+              <mat-card>
+                <mat-card-header>
+                  <mat-card-title>
+                    Información del Propietario
+                    <mat-divider></mat-divider>
+                  </mat-card-title>
+                </mat-card-header>
+
+                <mat-card-content>
+                  <div class="row">
+                    <div
+                      class="col-md-12 col-lg-12 col-xl-6"
+                      formGroupName="matFPV"
+                    >
+                      <mat-form-field
+                        class="example-full-width"
+                        appearance="fill"
+                      >
+                        <mat-label>Tipo de Indentificación</mat-label>
+                        <select
+                          matNativeControl
+                          #tipoIden
+                          formControlName="tipoIden"
+                          (change)="setTipoIdentificacion(tipoIden.value)"
+                          required
+                        >
+                          <option value="1" selected>Persona Natural</option>
+                          <option value="2">Empresa</option>
+                        </select>
+                      </mat-form-field>
+                    </div>
+                    <div
+                      class="col-md-12 col-lg-12 col-xl-6"
+                      formGroupName="matFPV"
+                    >
+                      <mat-form-field>
+                        <mat-label>Número de Cédula o RUC</mat-label>
+                        <input
+                          maxlength="13"
+                          formControlName="iden"
+                          matInput
+                          required
+                        />
+                        <mat-error
+                          *ngIf="
+                            formulario.controls.matFPV['controls'].iden.invalid
+                          "
+                          >{{ getErrorMessageCedula() }}</mat-error
+                        >
+                      </mat-form-field>
+                    </div>
+                    <div
+                      class="col-md-12 col-lg-12 col-xl-12"
+                      formGroupName="matFPV"
+                      *ngIf="
+                        formulario.controls.matFPV['controls'].tipoIden.value ==
+                        '2'
+                      "
+                    >
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Razon Social</mat-label>
+                        <input
+                          maxlength="125"
+                          formControlName="rzSo"
+                          matInput
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div
+                      class="col-md-12 col-lg-12 col-xl-6"
+                      formGroupName="matFPV"
+                      *ngIf="
+                        formulario.controls.matFPV['controls'].tipoIden.value ==
+                        '1'
+                      "
+                    >
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Nombres</mat-label>
+                        <input maxlength="125" formControlName="nom" matInput />
+                      </mat-form-field>
+                    </div>
+                    <div
+                      class="col-md-12 col-lg-12 col-xl-6"
+                      formGroupName="matFPV"
+                      *ngIf="
+                        formulario.controls.matFPV['controls'].tipoIden.value ==
+                        '1'
+                      "
+                    >
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Apellidos</mat-label>
+                        <input maxlength="125" formControlName="ape" matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+              <mat-card class="mt-3 mb-3">
+                <mat-card-header>
+                  <mat-card-title>
+                    Información de Contacto y Ubicación
+                    <mat-divider></mat-divider>
+                  </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="row" formGroupName="matFPV">
+                    <div class="col-md-12 col-lg-12 col-xl-6">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Calle Principal</mat-label>
+                        <input
+                          maxlength="200"
+                          formControlName="caPr"
+                          matInput
+                          required
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-12 col-lg-12 col-xl-6">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Calle Secundaria</mat-label>
+                        <input
+                          maxlength="200"
+                          formControlName="caSe"
+                          matInput
+                          required
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-12 col-lg-12 col-xl-6">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>N° de casa o Lote</mat-label>
+                        <input
+                          maxlength="60"
+                          formControlName="nmLt"
+                          matInput
+                          required
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-12 col-lg-12 col-xl-6">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Teléfono Convencional</mat-label>
+                        <input
+                          maxlength="15"
+                          formControlName="tlCv"
+                          matInput
+                          placeholder="Ex. 023333333"
+                        />
+                        <!--<mat-error *ngIf="thirdFormGroup.controls.telConvencional.invalid">{{getErrorMessageTelConvencional()}}</mat-error>-->
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-12 col-lg-12 col-xl-6">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Teléfono Celular</mat-label>
+                        <input
+                          maxlength="15"
+                          formControlName="tlCl"
+                          matInput
+                          placeholder="Ex. 09999999999"
+                          required
+                        />
+                        <!-- <mat-error *ngIf="thirdFormGroup.controls.telCelular.invalid">{{getErrorMessageTelCelular()}}</mat-error>-->
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-12 col-lg-12 col-xl-6">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Correo</mat-label>
+                        <input
+                          maxlength="60"
+                          formControlName="mail"
+                          matInput
+                          placeholder="Ex. mail@mail.com"
+                          required
+                        />
+                        <mat-error
+                          *ngIf="
+                            formulario.controls.matFPV['controls'].mail.invalid
+                          "
+                          >{{ getErrorMessageCorreo() }}</mat-error
+                        >
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <div class="col-md-5">
+              <div class="row">
+                <div class="col-md-12 mb-2">
+                  <mat-card class="mt-3 mb-3" formGroupName="matFVH">
+                    <mat-card-header>
+                      <mat-card-title>
+                        Información de Vehículo
+                        <mat-divider></mat-divider>
+                      </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                      <mat-form-field class="example-full-width">
+                        <mat-label>RAMV/DUI</mat-label>
+                        <input
+                          formControlName="raDu"
+                          matInput
+                          maxlength="15"
+                          required
+                        />
+                        <!-- <mat-error *ngIf="thirdFormGroup.controls.formularioMatricula.invalid">{{getErrorMessageformularioMatricula()}}</mat-error>-->
+                      </mat-form-field>
+                      <mat-form-field
+                        class="example-full-width"
+                        appearance="fill"
+                      >
+                        <mat-label>Tipo Vehículo</mat-label>
+                        <select
+                          matNativeControl
+                          formControlName="tipo"
+                          required
+                        >
+                          <option value="2" selected>Particular</option>
+                          <option value="3">Público</option>
+                          <option value="4">Diplomático</option>
+                          <option value="5">Estatal</option>
+                          <option value="6">Importado</option>
+                          <option value="7">
+                            Régimen de internación temporal
+                          </option>
+                        </select>
+                      </mat-form-field>
+                      <section class="example-section">
+                        <label class="example-margin">Gravamen:</label>
+                        <mat-radio-group formControlName="grav">
+                          <mat-radio-button
+                            color="primary"
+                            (change)="changeAFavDe($event.value)"
+                            class="example-margin"
+                            value="Si"
+                            >Si</mat-radio-button
+                          >
+                          <mat-radio-button
+                            color="primary"
+                            (change)="changeAFavDe($event.value)"
+                            class="example-margin"
+                            value="No"
+                            >No</mat-radio-button
+                          >
+                        </mat-radio-group>
+                      </section>
+                      <mat-form-field class="example-full-width">
+                        <mat-label>A favor de</mat-label>
+                        <input
+                          maxlength="125"
+                          formControlName="faDe"
+                          matInput
+                        />
+                      </mat-form-field>
+                      <mat-form-field class="example-full-width">
+                        <mat-label class="example-full-width"
+                          >Observaciones</mat-label
+                        >
+                        <textarea
+                          formControlName="obse"
+                          rows="5"
+                          matInput
+                        ></textarea>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+          <button
+            type="button"
+            [disabled]="formulario.invalid"
+            pButton
+            icon="fa fa-check "
+            *ngIf="newCar"
+            (click)="save()"
+            label="Guardar"
+          ></button>
+          <button
+            type="button"
+            [disabled]="formulario.invalid"
+            pButton
+            icon="fa fa-check "
+            *ngIf="!newCar"
+            (click)="edit()"
+            label="Actualizar"
+          ></button>
+          <button
+            type="button"
+            [disabled]="formulario.invalid"
+            pButton
+            icon="fa fa-trash "
+            class="ui-button-danger"
+            *ngIf="!newCar"
+            (click)="delete()"
+            label="Eliminar"
+          ></button>
+        </div>
+      </p-footer>
+    </p-dialog>
+    <div class="row mt-10">
+      <div class="col-12 text-center mt-5 mb-5" *ngIf="tramite != null">
+        <button
+          type="button"
+          *ngIf="tramite.esta == 'CHG'"
+          class="btn btn-primary"
+          (click)="generarSobre()"
+        >
+          Generar Sobre
+        </button>
+        <button
+          type="button"
+          *ngIf="tramite.esta == 'CHG'"
+          class="ml-1 btn btn-primary"
+          (click)="generarListado()"
+        >
+          Generar Listado
+        </button>
+        <button class="ml-1 btn btn-secondary" routerLink="/tramites">
+          Regresar
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

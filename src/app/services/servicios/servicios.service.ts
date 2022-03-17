@@ -79,5 +79,21 @@ export class ServiciosService {
   getReporte(id,tipo,aux){
     window.open(environment.URL_REPORTE+'/ReporteServlet?id='+id+'&tipo='+tipo+'&aux='+aux)
   }
+  /**
+   * Nuevos servicios para traer los dicumentos a vistaDocumentos
+   */
+   getAnexos(idTabla,tipo){
+    return this.http.get(environment.URL_SERVICIOS_DOCUMENTOS+'/documentos/findByIdTablaAndTipo/'+idTabla+'/'+tipo);
+  }
+
+  subirArchivos(archivos){
+    return this.http.post(environment.URL_SERVICIOS_DOCUMENTOS+'/documentos/save',archivos);
+  }
+
+  deleteArchivo(idDocumento){
+    // console.log(environment.URL_SERVICIOS_DOCUMENTOS+'/documentos/delete',idDocumento+'/usr');
+    return this.http.get(`${environment.URL_SERVICIOS_DOCUMENTOS}/documentos/delete/${idDocumento}/WEB`);
+  }
+
 
 }
