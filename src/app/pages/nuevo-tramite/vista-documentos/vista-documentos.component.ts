@@ -108,6 +108,7 @@ export class VistaDocumentosComponent implements OnInit {
             type: "success",
             confirmButtonText: "Aceptar",
           });
+          this.isArchivoCargado = false;
         } else {
           this.alertErrorMeesage(
             "Ocurrio un error al subir los archivos",
@@ -152,7 +153,7 @@ export class VistaDocumentosComponent implements OnInit {
     const source = `${base64String}`;
     const link = document.createElement("a");
     link.href = source;
-    link.download = `${fileName}.pdf`;
+    link.download = `${fileName}`;
     link.click();
   }
 }

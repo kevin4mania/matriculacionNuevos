@@ -40,6 +40,9 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatRadioModule } from "@angular/material/radio";
 import { VistaDocumentosComponent } from "./nuevo-tramite/vista-documentos/vista-documentos.component";
 import { MatDialogModule } from "@angular/material/dialog";
+import { MatriculacionComponent } from './matriculacion/matriculacion.component';
+// import {TreeTableModule} from 'primeng/treetable';
+
 
 @NgModule({
   declarations: [
@@ -50,6 +53,7 @@ import { MatDialogModule } from "@angular/material/dialog";
     TramitesComponent,
     NuevoTramiteComponent,
     VistaDocumentosComponent,
+    MatriculacionComponent,
   ],
   exports: [DashboardComponent, TemplateComponent],
   imports: [

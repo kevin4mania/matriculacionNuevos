@@ -1,0 +1,125 @@
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 mb-15">
+
+    <div class="mat-elevation-z8">
+      <div class="text-right" style="background-color: #fff">
+        <mat-form-field fxFlex="40%" class="mt-10 mr-3">
+          <input matInput type="text"  placeholder="Buscar" />
+          <!-- (keyup)="doFilter($event.target.value)" -->
+        </mat-form-field>
+      </div>
+
+      <p-table #dt [value]="tramites" dataKey="matFPV.idPV" styleClass="ui-table-customers" [rowHover]="true" [rows]="5"
+      [showCurrentPageReport]="true" [rowsPerPageOptions]="[5, 10, 25, 50]" [paginator]="true"
+      [filterDelay]="0" [globalFilterFields]="[
+        'matFVH.raDu',
+        'matFPV.iden',
+        'matFPV.ape',
+        'matFPV.nom',
+        'matFPV.faDe'
+      ]">
+      <ng-template pTemplate="caption">
+        Listado de Vehículos y Propietarios
+        <div class="ui-table-globalfilter-container">
+          <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+            placeholder="Buscar" />
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <!-- <th style="width: 3em"></th> -->
+          <th pSortableColumn="matFVH.raDu">
+            RAMV/DUI
+            <p-sortIcon field="matFVH.raDu"></p-sortIcon>
+          </th>
+          <th pSortableColumn="matFVH.grav">
+            Gravamen
+            <p-sortIcon field="matFVH.grav"></p-sortIcon>
+          </th>
+          <th pSortableColumn="matFPV.iden">
+            Identificación
+            <p-sortIcon field="matFPV.iden"></p-sortIcon>
+          </th>
+          <th>Propietario</th>
+          <th>A favor de</th>
+          <!-- <th style="width: 4em"></th> -->
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="rowexpansion" let-customer>
+        <tr>
+          <td [attr.colspan]="7">
+            <div class="row">
+              <div class="col-lg-8 col-md-12 col-sm-12">
+                <div class="widget border border-primary">
+                  <div class="widget-body">
+                    <h6 class="mb-15">Información de Propietario</h6>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="d-flex justify-content-between align-items-center">
+                          <div class="state">
+                            <strong class="mb-0">Identificación</strong>
+                            <h6 class="pt-0 pb-10">
+                              {{ customer.matFPV.iden }}
+                            </h6>
+                            <strong class="mb-0">Propietario</strong>
+                            <h6 class="pt-0 pb-10" *ngIf="customer.matFPV.rzSo == ''">
+                              {{ customer.matFTR.nmTr }}
+                              {{ customer.matFPV.ape }}
+                            </h6>
+                            <h6 class="pt-0 pb-10" *ngIf="customer.matFPV.rzSo != ''">
+                              {{ customer.matFPV.rzSo }}
+                            </h6>
+                            <strong class="mb-0">Dirección Domiciliaria</strong>
+                            <h6 class="pt-0 pb-10">
+                              {{ customer.matFPV.caPr }} y
+                              {{ customer.matFPV.caSe }},
+                              {{ customer.matFPV.nmLt }}
+                            </h6>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="d-flex justify-content-between align-items-center">
+                          <div class="state">
+                            <strong class="mb-0">Número Telefónico</strong>
+                            <h6 class="pt-0 pb-10">
+                              {{ customer.matFPV.tlCv }}
+                            </h6>
+                            <strong class="mb-0">Número Celular</strong>
+                            <h6 class="pt-0 pb-10">
+                              {{ customer.matFPV.tlCl }}
+                            </h6>
+                            <strong class="mb-0">Correo Electrónico</strong>
+                            <h6 class="pt-0 pb-10">
+                              {{ customer.matFPV.mail }}
+                            </h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" style="text-align: left">
+            No hay ningun vehículo asignado a este trámite.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+
+      
+
+    </div>
+  </div>
+</div>

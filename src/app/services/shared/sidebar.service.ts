@@ -20,6 +20,13 @@ export class SidebarService {
       url: '/tramites',
       submenu:[]
     },
+    {
+      titulo: 'Matriculacion',
+      icono: 'ik ik-file-text',
+      url: '/matriculacion',
+      submenu:[]
+    },
+
     /*{
       titulo: 'Reportes',
       icono: 'ik ik-bar-chart-line',

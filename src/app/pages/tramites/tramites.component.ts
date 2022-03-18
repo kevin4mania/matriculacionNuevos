@@ -78,6 +78,7 @@ export class TramitesComponent extends MatPaginatorIntl implements OnInit, After
     this.servicios.getTramitesNEQ('*', '*', 'INA',this.usuario.usuario,'*', 1, 99999).subscribe((resp: any) => {
       if (resp.codRetorno == '0001') {
         this.tramites = resp.retorno;
+        console.log(resp);
         this.numTramites = resp.countRegistros;
         this._uiService.loadingCarga(false);
         this.dataSource = new MatTableDataSource<PeriodicElement>(this.tramites)
